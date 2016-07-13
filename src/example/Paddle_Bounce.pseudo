@@ -1,0 +1,25 @@
+set x to 100
+set y to 100
+set dx to 5
+set dy to 0
+
+forever
+	set background to white
+	draw a blue rectangle at mouse x, mouse y with width 100 and height 10
+	
+	draw a red circle at x, y
+	change x by dx
+	change y by dy
+	increment dy
+	
+	if y > height - 20
+		invert dy
+	
+	if x > width - 20
+		invert dx
+	
+	if x < 20
+		invert dx
+	
+	if distance from x, y to mouse x, mouse y < 40
+		invert dy

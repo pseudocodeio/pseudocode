@@ -1,0 +1,4 @@
+draw a circle at 100, 100
+draw a blue square at 200, 200
+draw an orange rectangle at 400, 400 with width 200 height 100
+draw a purple oval with width 80 height 40 at 200, 200

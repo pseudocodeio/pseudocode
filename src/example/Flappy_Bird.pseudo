@@ -1,0 +1,26 @@
+set x to 100
+set y to height / 2
+set dy to 0
+set pipex to width + 25
+
+forever
+	set background to light blue
+	draw a yellow oval at x, y with width 50 height 40
+
+	draw a green rectangle at pipex, 100 with width 50 height 200
+	draw a green rectangle at pipex, height - 100 with width 50 height 200 	
+	
+	change pipex by -3
+
+	if pipex < -25
+		set pipex to height + 25
+	
+	change y by dy
+	change dy by 1
+	
+	if mouse clicked
+		set dy to -10
+
+	if y > height or y < 0
+		set y to height / 2
+		set dy to 0

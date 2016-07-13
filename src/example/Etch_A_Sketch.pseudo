@@ -1,0 +1,19 @@
+set x1 to 100
+set y1 to height - 100
+
+set x2 to width - 100
+set y2 to height - 100
+
+forever
+	draw a small red circle at x1, y1
+	draw a small red circle at x2, y2	
+	
+	change x1 by -5 if "a" pressed
+	change x1 by 5 if "d" pressed
+	change y1 by -5 if "w" pressed
+	change y1 by 5 if "s" pressed
+	
+	change x2 by -5 if left pressed
+	change x2 by 5 if right pressed
+	change y2 by -5 if up pressed
+	change y2 by 5 if down pressed
