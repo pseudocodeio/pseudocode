@@ -112,8 +112,18 @@ public class Parser {
 	public Instruction parseInstruction(Block block) {
 
 		// Repeat instructions forever
-		if (getNext("forever"))
-			return new Forever(parseBlock(block));
+		if (getNext("forever", "repeatedly", "always")) {
+			if (! atDelimiter()) {
+				Instruction repeatForever = parseInstruction(block);
+				if (repeatForever != null) {
+					Block repeatForeverBlock = new Block();
+					repeatForeverBlock.add(repeatForever);
+					return new Forever(repeatForeverBlock);
+				}
+				else return null;
+			}
+			else return new Forever(parseBlock(block));
+		}
 
 		// Parse an if statement
 		else if (getNext("if") && peekExpression()) {
@@ -343,9 +353,15 @@ public class Parser {
 			else while (peekNext("at", "with") && ! atDelimiter()) {
 				// Set the coordinates with the "at" keyword
 				if (getNext("at")) {
+					// Draw at the mouse position
 					if (getNext("the mouse")) {
 						draw.setX(new SymbolTerminal("mousex"));
 						draw.setY(new SymbolTerminal("mousey"));
+					}
+					// Draw something at the center of the screen
+					else if (getNext("the center")) {
+						draw.setX(new Expression(new SymbolTerminal("width"), Operator.Divide, new Terminal(2)));
+						draw.setY(new Expression(new SymbolTerminal("height"), Operator.Divide, new Terminal(2)));
 					}
 					else {
 						// Try to parse one number
@@ -420,28 +436,8 @@ public class Parser {
 	public Color parseColor() {
 		// TODO: Parse hex code
 		if (peekNext().length() == 7 && peekNext().matches("\\#[0-9a-f]+")) {
-			String hex = getNext();
+			return RGB.fromHex(getNext());
 		}
-		
-		// TODO: Parse an RGB value
-		if (getNext("rgb")) {
-			
-		}
-		
-		// TODO: check if it's an RGB value
-//		if(peekNumberTerminal() || peekRandomTerminal()){
-//			int r = (int) parseTerminal().getValue();
-//			if(peekNumberTerminal() || peekRandomTerminal()){
-//				int g = (int) parseTerminal().getValue();
-//				if(peekNumberTerminal()||peekRandomTerminal()){
-//					int b = (int) parseTerminal().getValue();
-//					r %= 256;
-//					g %= 256;
-//					b %= 256;
-//					return new Color(r,g,b);
-//				}
-//			}
-//		}
 
 		// Try 1 word colors
 		if (RGB.hasColor(peekNext())) {

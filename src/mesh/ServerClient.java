@@ -8,16 +8,20 @@ import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerClient extends Thread {
-	private Server master;
+	private Server server;
 	private BufferedReader input;
 	private PrintWriter output;
 	private String ip;
+	
+	// Whether this connection is currently active.
 	private boolean connected = false;
-	private static ConcurrentHashMap <String, Double> cache;
+	
+	String name;
+	private boolean hasName = false;
 
-	public ServerClient(Socket socket, Server master) {
+	public ServerClient(Socket socket, Server server) {
 		try {
-			this.master = master;
+			this.server = server;
 			ip = socket.getInetAddress().getHostAddress();
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			output = new PrintWriter(socket.getOutputStream(), true);
@@ -31,22 +35,40 @@ public class ServerClient extends Thread {
 
 		// Copy all current data to client
 		StringBuilder initialUpdate = new StringBuilder();
-		for (String key : cache.keySet())
-			initialUpdate.append(key).append('=').append(cache.get(key)).append('\n');
+		for (String name : server.cache.keySet()) {
+			for (String key : server.cache.get(name).keySet())
+				initialUpdate
+					.append(name).append('@')
+					.append(key).append('=')
+					.append(server.cache.get(name).get(key)).append('\n');
+		}
 
 		output.println(initialUpdate);
-		//Window.mesh.message("updated " + ip);
 
 		// Keep reading updates from the client until disconnect, and update all other clients with updates
 		try {
-			while (true) {
+			while (connected) {
 				String line = input.readLine();
 				if (line == null) 
 					break;
-				
-				int equals = line.indexOf('=');
-				String key = line.substring(0, equals);
-				master.put(this, key, Double.parseDouble(line.substring(equals + 1)));
+				else if (! hasName) {
+					name = line;
+					server.cache.put(name, new ConcurrentHashMap <String, Double> ());
+				}
+				else {
+					// Get delimiters in the update string.
+					int at = line.indexOf('@'), equals = line.indexOf('=');
+					
+					String name = line.substring(0, at);
+					String key = line.substring(at + 1, equals);
+					String value = line.substring(equals + 1);
+					
+					if (! server.cache.containsKey(name))
+						server.cache.put(name, new ConcurrentHashMap <String, Double> ());
+					
+					
+					server.cache.get(name).put(key, Double.parseDouble(value));
+				}
 			}
 
 			input.close();
@@ -55,21 +77,9 @@ public class ServerClient extends Thread {
 		} catch (IOException e) {}
 	}
 
-	public void put(String key, int value) {
+	public void put(String name, String key, double value) {
 		if (connected) {
-			output.println('#' + key + '=' + value);
-		}
-	}
-
-	public void put(String key, double value) {
-		if (connected) {
-			output.println('%' + key + '=' + value);
-		}
-	}
-
-	public void put(String key, String value) {
-		if (connected) {
-			output.println('$' + key + '=' + value);
+			output.println(name + '@' + key + '=' + value);
 		}
 	}
 }

@@ -160,20 +160,26 @@ public class Draw extends Instruction {
 		}
 	}
 	
-	@Override
+	/**
+	 * Returns true if the given instruction draws the same shape in the context of the given block.
+	 * @param instruction
+	 * @param block
+	 * @return
+	 */
 	public boolean equals(Instruction instruction, Block block) {
-		// Checks if they are draw instructions for the same thing.
 		if (instruction instanceof Draw) {
 			Draw other = (Draw) instruction;
-			if (this.color != other.color)
+			if (this.color.getRed() != other.color.getRed() ||
+				this.color.getGreen() != other.color.getGreen() ||
+				this.color.getBlue() != other.color.getBlue())
 				return false;
-			if (this.x != null && ! this.x.equals(other.x))
+			if ((this.x != null && ! this.x.equals(other.x)) || (this.x == null && other.x != null))
 				return false;
-			if (this.y != null && ! this.x.equals(other.y))
+			if ((this.y != null && ! this.x.equals(other.y)) || (this.y == null && other.y != null))
 				return false;
-			if (this.width != null && ! this.width.equals(other.width))
+			if ((this.width != null && ! this.width.equals(other.width)) || (this.width == null && other.width != null))
 				return false;
-			if (this.height != null && ! this.height.equals(other.height))
+			if ((this.height != null && ! this.height.equals(other.height)) || (this.height == null && other.height != null))
 				return false;
 			return true;
 		}

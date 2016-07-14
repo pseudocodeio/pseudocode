@@ -15,6 +15,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import expression.Constant;
+import expression.RGB;
 import parser.Lexer;
 
 /**
@@ -37,11 +38,13 @@ public class Editor extends JPanel implements KeyListener {
 	public static final String FONT = "Menlo";
 	public static final int FONT_SIZE = 18;
 	
-	private static final Color background = new Color(248, 248, 248);
-	private static final Color foreground = new Color(20, 20, 20);
-	private static final Color keyword = new Color(51, 102, 153);
-	private static final Color attribute = new Color(51, 102, 153);
-	private static final Color operator = new Color(221, 17, 153);
+	private static final Color background = RGB.fromHex("#ECEFF1");
+	private static final Color foreground = RGB.fromHex("#263238");
+	private static final Color keyword = RGB.fromHex("#3F51B5");
+	private static final Color attribute = RGB.fromHex("#2196F3");
+	private static final Color number = RGB.fromHex("#673AB7");	
+	private static final Color operator = RGB.fromHex("#F44336");
+	private static final Color string = RGB.fromHex("#FFC107");
 	
 	private static Lexer lexer;
 	
@@ -71,6 +74,7 @@ public class Editor extends JPanel implements KeyListener {
 	
 	public void updateText(String text) {
 		area.setText(text);
+		format();
 	}
 	
 	public String getText() {
@@ -109,8 +113,12 @@ public class Editor extends JPanel implements KeyListener {
 					style = "keyword";
 				else if (Constant.operator.contains(token)) 
 					style = "operator";
+				else if (Constant.attribute.contains(token))
+					style = "attribute";
 				else if (token.matches("\\d+(|\\.\\d*)"))
 					style = "number";
+				else if (token.startsWith("\"") && token.endsWith("\""))
+					style = "string";
 				
 				// If a style was found, then apply it to this section
 				if (style != null) {
@@ -136,8 +144,9 @@ public class Editor extends JPanel implements KeyListener {
 		addStyle("base", foreground, false, false);
 		addStyle("keyword", keyword, true, false);
 		addStyle("attribute", attribute, false, false);
-		addStyle("number", Color.GREEN, false, false);
-		addStyle("operator", Color.RED, false, false);
+		addStyle("number", number, false, false);
+		addStyle("string", string, false, false);
+		addStyle("operator", operator, false, false);
 		//addStyle("operator", Color.RED, false, false);
 	}
 	

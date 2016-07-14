@@ -8,10 +8,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -23,7 +21,8 @@ import expression.Terminal;
 import instruction.Block;
 
 /**
- * An OutputPanel is a JPanel that draws the output of an algorithm.
+ * An Interpreter is a JPanel that draws the output of a Block object. It also controls a Console object
+ * which shows a JFrame with printed output and warning messages.
  * 
  * @author  Keshav Saharia
  * 			keshav@techlabeducation.com
@@ -32,7 +31,6 @@ import instruction.Block;
  */
 public class Interpreter extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 	private static final long serialVersionUID = 1L;
-	private static final int DEFAULT_PORT = 4965;
 	
 	// Reference to the parent frame.
 	private Pseudocode pseudocode;
@@ -56,15 +54,12 @@ public class Interpreter extends JPanel implements MouseListener, MouseMotionLis
 	public static Terminal mouseClicked = new Terminal();
 	public static Terminal mouseX = new Terminal();
 	public static Terminal mouseY = new Terminal();
-	
-	// Mesh data
-	public static boolean meshRunning = false;
 
 	// References to threads for master-slave network.
 	private static Server server;
 	private static Client client;
-	private static boolean running = false;
-	
+	public static boolean running = false;
+	private static final int DEFAULT_PORT = 4965;
 	
 	/**
 	 * Constructs an OutputPanel object that will be displayed in the given PseudocodeFrame frame.
@@ -126,7 +121,6 @@ public class Interpreter extends JPanel implements MouseListener, MouseMotionLis
 		if (reset) {
 			reset = false;
 			reset(g);
-			//g.drawImage(front, 0, 0, null);
 		}
 		if (block != null) {
 			// Get references to current buffer to draw on, and static buffer with previously drawn frame.
@@ -171,8 +165,8 @@ public class Interpreter extends JPanel implements MouseListener, MouseMotionLis
 	}
 	
 	public void startMesh() {
-		if (! meshRunning) {
-			meshRunning = true;
+		if (! running) {
+			running = true;
 //			int option = JOptionPane.showOptionDialog(this, "Use default port?", 
 //					"Starting server", JOptionPane.YES_NO_CANCEL_OPTION, 0, null, null, JOptionPane.YES_OPTION);
 			server = new Server(this, DEFAULT_PORT);
@@ -181,7 +175,7 @@ public class Interpreter extends JPanel implements MouseListener, MouseMotionLis
 	}
 	
 	public void joinMesh() {
-		if (meshRunning) {
+		if (running) {
 			if (client != null) {
 				client.interrupt();
 			}
@@ -189,15 +183,10 @@ public class Interpreter extends JPanel implements MouseListener, MouseMotionLis
 				server.interrupt();
 			}
 		}
-		meshRunning = true;
+		running = true;
 		String ip = meshInput("Enter the server IP address.");
-		int port = DEFAULT_PORT;
-		if (ip.indexOf(':') > 0) {
-			try {
-				port = Integer.parseInt(ip.substring(ip.indexOf(':') + 1));
-				
-			} catch (NumberFormatException e) {};
-		}
+		client = new Client(this, ip, DEFAULT_PORT);
+		client.start();
 	}
 	
 	public String meshInput(String message) {
@@ -206,6 +195,11 @@ public class Interpreter extends JPanel implements MouseListener, MouseMotionLis
 	
 	public void meshAlert(String message) {
 		JOptionPane.showMessageDialog(pseudocode, message);
+	}
+	
+	public void print(String message) {
+		if (console != null)
+			console.print(message);
 	}
 	
 	private void print(Block block) {

@@ -20,8 +20,10 @@ public class Console extends JFrame {
 	public Console(Pseudocode pseudocode) {
 		super("Console");
 		this.pseudocode = pseudocode;
+		
 		setSize(Pseudocode.SIZE, Pseudocode.SIZE / 2);
 		setLocation((int) pseudocode.getLocation().getX(), (int) (pseudocode.getLocation().getY() + Pseudocode.SIZE + 50));
+		setFocusableWindowState(false);
 		
 		// Create a text area in a scroll pane 
 		area = new JTextPane();
@@ -34,6 +36,8 @@ public class Console extends JFrame {
 		areaPanel.add(area);
 		JScrollPane pane = new JScrollPane(areaPanel);
 		add(pane);
+		
+		
 	}
 
 	public void reset() {

@@ -1,12 +1,26 @@
 # Pseudocode
 
-Pseudocode is a live programming environment for pseudocode implemented by [Keshav Saharia](http://keshav.is). It started as a project for my advanced students and high school interns to develop a programming language, and has evolved into a useful teaching tool that we use at [TechLab Education](https://techlab.education). All of the code is open-source and well documented, so it should be quite easy to add new instructions, modify the parser, and extend the language.
+Pseudocode is a live programming environment for writing natural language programs implemented by [Keshav Saharia](http://keshav.is) and maintained by the instructors/interns at [TechLab Education](https://techlab.education). 
+It is designed to be a fun introduction to typed programming languages, without the burden of syntactical correctness or error messages. 
 
-The next step after pseudocode is a conventional program like Python or Java. I'm also the developer of [Pythonroom](https://pythonroom.com), a fun and easy way to teach Python in any classroom. 
 
-## Overview of parsing and lexing
+There is no "run" button and no error messages - code is executed as you type it, and instructions that cannot be understood are ignored. After teaching with pseudocode, we teach Python with [Pythonroom](https://pythonroom.com) and Java with the [APCS graphics](http://apcs.io) library. 
 
-The steps of a parser
+## Getting started
+
+For Mac OSX, the easiest way to get started is to download the [Pseudocode application](https://github.com/MAC_APP_URL) and copy it into your Applications folder.
+
+You can also download a [runnable JAR file](https://github.com/JAR_FILE_URL) that will work on any operating system with a Java runtime environment.
+
+## Crash course
+
+The first step is to draw a circle. You'll notice that when you complete typing this command, a circle shows up in the top left corner of the output window.
+
+```
+draw a circle
+```
+
+You can position this circle 
 
 ## Examples
 

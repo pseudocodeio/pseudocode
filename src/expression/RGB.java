@@ -20,7 +20,17 @@ public class RGB {
 	private static void addColor(String name, int r, int g, int b) {
 		color.put(name.replaceAll("\\s", ""), new Color(r, g, b));
 	}
-
+	
+	public static Color fromHex(String hex) {
+		if (hex.length() != 7 || ! hex.matches("\\#[0-9a-fA-F]+"))
+			return Color.BLACK;
+		
+		hex = hex.toLowerCase();
+		return new Color(
+			Integer.valueOf( hex.substring(1, 3), 16 ),
+			Integer.valueOf( hex.substring(3, 5), 16 ),
+			Integer.valueOf( hex.substring(5, 7), 16 ));
+	}
 	
 	public static Color getColor(String name) {
 		return color.get(name.toLowerCase().replaceAll("\\s", ""));

@@ -14,12 +14,12 @@ import java.util.HashSet;
  */
 @SuppressWarnings("serial")
 public class Constant {
-	
+
 	// Size constants
 	public static final Terminal BIG = new Terminal(50);
 	public static final Terminal MEDIUM = new Terminal(20);
 	public static final Terminal SMALL = new Terminal(10);
-	
+
 	// A set of reserved keywords
 	public static HashSet <String> keyword = new HashSet <String> () {{
 		add("draw");
@@ -39,14 +39,24 @@ public class Constant {
 		add("otherwise");
 		add("print");
 	}};
-	
+
+	// A set of reserved keywords
+	public static HashSet <String> attribute = new HashSet <String> () {{
+		add("with");
+		add("radius");
+		add("width");
+		add("height");
+		add("size");
+		add("color");
+	}};
+
 	public static HashSet <String> property = new HashSet <String> () {{
 		add("width");
 		add("height");
 		add("size");
 		add("radius");
 	}};
-	
+
 	public static HashSet <String> operator = new HashSet <String> () {{
 		add("+");
 		add("-");
@@ -55,6 +65,7 @@ public class Constant {
 		add("and");
 		add("or");
 		add("not");
+		add("to");
 		add("<");
 		add(">");
 		add("<=");
