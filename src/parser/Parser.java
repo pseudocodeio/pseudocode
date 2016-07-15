@@ -167,8 +167,10 @@ public class Parser {
 					String parameter = getNext();
 					if (peekExpression()) {
 						Expression expression = parseExpression();
-						call.addArgument(parameter, expression);
+						if (expression != null)
+							call.addArgument(parameter, expression);
 					}
+					skipNext(",");
 				}
 			}
 			return call;
