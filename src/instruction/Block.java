@@ -21,7 +21,8 @@ public class Block extends Instruction {
 	// Reference to the symbol table. If this block is created by a parent block, this
 	// will reference the symbol table of the parent block.
 	private HashMap <String, Double> symbol;
-	private HashMap <String, String> stringSymbol;
+	private HashMap <String, Double> local;
+	private HashMap <String, Block> function;
 	private Block parent;
 	
 	// The console output view.
@@ -29,6 +30,9 @@ public class Block extends Instruction {
 	
 	// A list of instructions in the block.
 	private ArrayList <Instruction> instructions;
+	
+	// Parameters for a block that is executed as a function
+	private ArrayList <String> parameters;
 	
 	// Integers for storing the progress through the block and its indent level
 	private int currentInstruction = 0;
@@ -47,10 +51,13 @@ public class Block extends Instruction {
 	 */
 	public Block(Block parent) {
 		instructions = new ArrayList <Instruction> ();
+		local = new HashMap <String, Double> ();
 		
 		// If this is the root block
-		if (parent == null)
+		if (parent == null) {
 			symbol = new HashMap <String, Double> ();
+			function = new HashMap <String, Block> ();
+		}
 		
 		// Otherwise take the symbol table from the root block
 		else { 
@@ -75,6 +82,27 @@ public class Block extends Instruction {
 	public void add(Instruction instruction) {
 		instruction.setBlock(this);
 		instructions.add(instruction);
+	}
+	
+	/**
+	 * Adds a parameter to this block.
+	 */
+	public void addParameter(String parameter) {
+		if (parameters == null)
+			parameters = new ArrayList <String> ();
+		parameters.add(parameter);
+	}
+	
+	/**
+	 * Sets the parameters of this block to their current values before evaluating.
+	 */
+	public void setParameters(Block block, HashMap <String, Expression> arguments) {
+		if (parameters != null) {
+			for (String parameter : parameters) {
+				if (arguments.containsKey(parameter))
+					assignLocal(parameter, arguments.get(parameter).evaluate(block));
+			}
+		}
 	}
 	
 	/**
@@ -217,7 +245,7 @@ public class Block extends Instruction {
 	 * @return true if the symbol exists, false otherwise
 	 */
 	public boolean hasSymbol(SymbolTerminal symbol) {
-		return this.symbol.containsKey(symbol.toString());
+		return this.local.containsKey(symbol.toString()) || this.symbol.containsKey(symbol.toString());
 	}
 	
 	/**
@@ -226,7 +254,7 @@ public class Block extends Instruction {
 	 * @return true if the symbol exists, false otherwise
 	 */
 	public boolean hasSymbol(String symbol) {
-		return this.symbol.containsKey(symbol);
+		return this.local.containsKey(symbol) || this.symbol.containsKey(symbol);
 	}
 	
 	/**
@@ -235,7 +263,9 @@ public class Block extends Instruction {
 	 * @return the value assigned to the symbol, or 0 if no value was assigned
 	 */
 	public double get(SymbolTerminal symbol) {
-		if (hasSymbol(symbol))
+		if (local.containsKey(symbol.toString()))
+			return local.get(symbol.toString());
+		else if (hasSymbol(symbol))
 			return this.symbol.get(symbol.toString());
 		else return 0;
 	}
@@ -246,7 +276,9 @@ public class Block extends Instruction {
 	 * @return the value assigned to the symbol, or 0 if no value was assigned
 	 */
 	public double get(String symbol) {
-		if (hasSymbol(symbol))
+		if (local.containsKey(symbol))
+			return local.get(symbol);
+		else if (hasSymbol(symbol))
 			return this.symbol.get(symbol);
 		else return 0;
 	}
@@ -276,6 +308,34 @@ public class Block extends Instruction {
 	 */
 	public void assign(String symbol, double value) {
 		this.symbol.put(symbol, value);
+	}
+	
+	/**
+	 * Assigns a local value of the given string to value.
+	 */
+	public void assignLocal(String symbol, double value) {
+		this.local.put(symbol, value);
+	}
+	
+	/**
+	 * Defines a function with the given name and block.
+	 */
+	public void define(SymbolTerminal symbol, Block block) {
+		this.function.put(symbol.toString(), block);
+	}
+	
+	/**
+	 * Defines a function with the given name and block.
+	 */
+	public void define(String symbol, Block block) {
+		this.function.put(symbol, block);
+	}
+	
+	/**
+	 * Returns the function definition for the given symbol.
+	 */
+	public Block getDefinition(String symbol) {
+		return this.function.get(symbol);
 	}
 	
 	/**

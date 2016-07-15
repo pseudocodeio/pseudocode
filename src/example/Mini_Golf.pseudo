@@ -1,0 +1,17 @@
+set x to 100
+set y to 100
+set dx to 0
+set dy to 0
+
+forever
+	set the background to green
+	
+	draw a white circle at x, y with radius 8
+	draw a gray square at the mouse with size 20
+	
+	change x by dx
+	change y by dy
+	
+	if distance from the mouse to x, y is less than 20
+		set dx to (x - mouse x) * 3
+		set dy to (y - mouse y) * 3

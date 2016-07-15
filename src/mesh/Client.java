@@ -71,4 +71,23 @@ public class Client extends Thread {
 			//output.println(key + '=' + value);
 		}
 	}
+	
+	public static void parse(String line, ConcurrentHashMap <String, ConcurrentHashMap <String, Double>> cache) {
+		if (line.length() > 0) {
+			// Get delimiters in the update string.
+			int at = line.indexOf('@'), equals = line.indexOf('=');
+			if (at < 0 || equals < 0) return;
+			
+			// Get the name, key, and value for the output.
+			String name = line.substring(0, at);
+			String key = line.substring(at + 1, equals);
+			String value = line.substring(equals + 1);
+			
+			if (! cache.containsKey(name))
+				cache.put(name, new ConcurrentHashMap <String, Double> ());
+			
+			
+			cache.get(name).put(key, Double.parseDouble(value));
+		}
+	}
 }

@@ -49,7 +49,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	private static String[][] exampleCategory = {
 			{ "Basics", "Draw Shapes", "Mouse Coloring" },
 			{ "Physics", "Bouncing Ball" }, 
-			{ "Games", "Flappy Bird", "Paddle Bounce", "Etch A Sketch" }
+			{ "Games", "Flappy Bird", "Paddle Bounce", "Mini Golf", "Etch A Sketch" }
 	};
 
 	// The menu item that shows the current mesh

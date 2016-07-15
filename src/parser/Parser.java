@@ -1,6 +1,7 @@
 package parser;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import expression.*;
@@ -23,7 +24,7 @@ public class Parser {
 
 	// The list of shapes that can be drawn.
 	private String[] drawType = { "circle", "square", "rectangle", "oval", "line", "background" };
-	private String[] builtInExpression = { "mouse", "random", "square root", "absolute value" };
+	private String[] builtInExpression = { "mouse", "random", "square root", "absolute value", "distance" };
 	private String[] specialKeys = {"up", "down", "left", "right", "space"};
 	private static HashSet <String> reservedWords;
 
@@ -110,9 +111,71 @@ public class Parser {
 	 * @return an Instruction object if one could be parsed, null otherwise
 	 */
 	public Instruction parseInstruction(Block block) {
-
+		
+		// Function definition
+		if (getNext("to")) {
+			StringBuilder functionName = new StringBuilder();
+			ArrayList <String> parameters = new ArrayList <String> ();
+			
+			while (! atDelimiter() && ! peekNext("with")) {
+				if (peekNext().matches("[a-zA-Z]+")) {
+					if (functionName.length() > 0)
+						functionName.append(" ");
+					functionName.append(getNext());
+				}
+				else skipNext();
+			}
+			
+			if (functionName.length() == 0)
+				return null;
+			
+			if (getNext("with")) {
+				while (! atDelimiter()) {
+					parameters.add(getNext());
+					skipNext(",");
+					skipNext("and");
+				}
+			}
+			
+			Block functionBlock = parseBlock(block);
+			for (String parameter : parameters)
+				functionBlock.addParameter(parameter);
+			
+			return new FunctionDefinition(functionName.toString(), functionBlock);
+		}
+		
+		// Function call
+		else if (getNext("do")) {
+			StringBuilder functionName = new StringBuilder();
+			
+			while (! atDelimiter() && ! peekNext("with")) {
+				if (peekNext().matches("[a-zA-Z]+")) {
+					if (functionName.length() > 0)
+						functionName.append(" ");
+					functionName.append(getNext());
+				}
+				else skipNext();
+			}
+			
+			if (functionName.length() == 0)
+				return null;
+			
+			FunctionCall call = new FunctionCall(functionName.toString());
+			
+			if (getNext("with")) {
+				while (! atDelimiter()) {
+					String parameter = getNext();
+					if (peekExpression()) {
+						Expression expression = parseExpression();
+						call.addArgument(parameter, expression);
+					}
+				}
+			}
+			return call;
+		}
+		
 		// Repeat instructions forever
-		if (getNext("forever", "repeatedly", "always")) {
+		else if (getNext("forever", "repeatedly", "always")) {
 			if (! atDelimiter()) {
 				Instruction repeatForever = parseInstruction(block);
 				if (repeatForever != null) {
@@ -167,12 +230,49 @@ public class Parser {
 		else if (peekNext("increment", "decrement", "change", "increase", "decrease")) {
 			return parseIncrement();
 		}
+		
+		// Perform a mathematical operation on a symbol
+		else if (peekNext("add", "subtract", "multiply", "divide", "scale")) {
+			return parseMath();
+		}
 
 		// Invert a number
 		else if (getNext("invert", "reverse")) {
 			return parseInvert();
 		}
 
+		return null;
+	}
+
+	private Instruction parseMath() {
+		if (getNext("add") && peekExpression()) {
+			Expression increment = parseExpression();
+			if (getNext("to") && peekExistingSymbolTerminal()) {
+				SymbolTerminal symbol = parseSymbolTerminal();
+				return new Assign(symbol, new Expression(symbol, Operator.Add, increment));
+			}
+		}
+		if (getNext("subtract") && peekExpression()) {
+			Expression decrement = parseExpression();
+			if (getNext("from") && peekExistingSymbolTerminal()) {
+				SymbolTerminal symbol = parseSymbolTerminal();
+				return new Assign(symbol, new Expression(symbol, Operator.Subtract, decrement));
+			}
+		}
+		if (getNext("multiply", "scale") && peekExistingSymbolTerminal()) {
+			SymbolTerminal symbol = parseSymbolTerminal();
+			if (getNext("by") && peekExpression()) {
+				Expression scale = parseExpression();
+				return new Assign(symbol, new Expression(symbol, Operator.Multiply, scale));
+			}
+		}
+		if (getNext("divide") && peekExistingSymbolTerminal()) {
+			SymbolTerminal symbol = parseSymbolTerminal();
+			if (getNext("with", "by") && peekExpression()) {
+				Expression scale = parseExpression();
+				return new Assign(symbol, new Expression(symbol, Operator.Divide, scale));
+			}
+		}
 		return null;
 	}
 
@@ -646,27 +746,40 @@ public class Parser {
 		Expression x1, y1, x2, y2;
 		getNext("distance");
 		skipNext("from");
-		if (peekExpression())
-			x1 = parseExpression();
-		else return null;
 		
-		skipNext(",");
-		
-		if (peekExpression())
-			y1 = parseExpression();
-		else return null;
+		if (getNext("the mouse")) {
+			x1 = new SymbolTerminal("mousex");
+			y1 = new SymbolTerminal("mousey");
+		}
+		else {
+			if (peekExpression())
+				x1 = parseExpression();
+			else return null;
+			
+			skipNext(",");
+			
+			if (peekExpression())
+				y1 = parseExpression();
+			else return null;
+		}
 		
 		skipNext("to");
 		
-		if (peekExpression())
-			x2 = parseExpression();
-		else return null;
-		
-		skipNext(",");
-		
-		if (peekExpression())
-			y2 = parseExpression();
-		else return null;
+		if (getNext("the mouse")) {
+			x2 = new SymbolTerminal("mousex");
+			y2 = new SymbolTerminal("mousey");
+		}
+		else {
+			if (peekExpression())
+				x2 = parseExpression();
+			else return null;
+			
+			skipNext(",");
+			
+			if (peekExpression())
+				y2 = parseExpression();
+			else return null;
+		}
 		
 		return new DistanceTerminal(x1, y1, x2, y2);
 	}

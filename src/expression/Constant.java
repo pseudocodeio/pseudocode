@@ -66,6 +66,7 @@ public class Constant {
 		add("or");
 		add("not");
 		add("to");
+		add("by");
 		add("<");
 		add(">");
 		add("<=");
