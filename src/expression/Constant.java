@@ -24,6 +24,8 @@ public class Constant {
 	public static HashSet <String> keyword = new HashSet <String> () {{
 		add("draw");
 		add("set");
+		add("to");
+		add("do");
 		add("set background");
 		add("increment");
 		add("decrement");
