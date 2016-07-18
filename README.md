@@ -28,6 +28,16 @@ draw a circle
 
 You can position this circle 
 
+```
+draw a circle at the center
+```
+
+### Forever loops
+
+```
+forever draw a small circle at the mouse
+```
+
 ## Examples
 
 - draw shapes
