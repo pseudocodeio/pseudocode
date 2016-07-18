@@ -3,6 +3,7 @@
 Pseudocode is a live programming environment for writing natural language programs implemented by [Keshav Saharia](http://keshav.is) and maintained by the instructors/interns at [TechLab Education](https://techlab.education). 
 It is designed to be a fun introduction to typed programming languages, without the burden of syntactical correctness or error messages. 
 
+**Keshav will add GIF here**
 
 There is no "run" button and no error messages - code is executed as you type it, and instructions that cannot be understood are ignored. After teaching with pseudocode, we teach Python with [Pythonroom](https://pythonroom.com) and Java with the [APCS graphics](http://apcs.io) library. 
 
@@ -12,13 +13,18 @@ For Mac OSX, the easiest way to get started is to download the [Pseudocode appli
 
 You can also download a [runnable JAR file](https://github.com/JAR_FILE_URL) that will work on any operating system with a Java runtime environment.
 
-## Crash course
+## Features
 
-The first step is to draw a circle. You'll notice that when you complete typing this command, a circle shows up in the top left corner of the output window.
+### Drawing shapes
+
+Draw a circle/square/rectangle/oval
 
 ```
 draw a circle
 ```
+
+** put an image of a circle**
+
 
 You can position this circle 
 
