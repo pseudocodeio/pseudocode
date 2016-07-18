@@ -23,7 +23,7 @@ public class Parser {
 	private Block rootBlock;			// The root block being parsed
 
 	// The list of shapes that can be drawn.
-	private String[] drawType = { "circle", "square", "rectangle", "oval", "line", "background" };
+	private String[] drawType = { "circle", "square", "rectangle", "oval", "line", "background", "image" };
 	private String[] builtInExpression = { "mouse", "random", "square root", "absolute value", "distance" };
 	private String[] specialKeys = {"up", "down", "left", "right", "space"};
 	private static HashSet <String> reservedWords;
@@ -434,6 +434,13 @@ public class Parser {
 			// Set the size of the circle
 			if (size != null)
 				draw.setSize(size);
+			
+			// If drawing an image
+			if(draw.isImage()){
+				if(hasNext()){
+					draw.setImageLocation(getNext());
+				}
+			}
 
 			// If drawing a line
 			if (draw.isLine()) {

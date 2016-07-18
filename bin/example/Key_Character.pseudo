@@ -1,0 +1,11 @@
+set x to 100
+set y to 100
+
+forever
+	set background to white
+	draw a red circle at x, y
+	
+	change y by -5 if up pressed
+	change y by 5 if down pressed
+	change x by -5 if left pressed
+	change x by 5 if right pressed

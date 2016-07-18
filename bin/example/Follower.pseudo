@@ -1,0 +1,9 @@
+set x to width / 2
+set y to height / 2
+forever
+	draw a randomly colored circle at x y
+	
+	change x by 5 if x < mouse x
+	change y by 5 if y < mouse y
+	change x by -5 if x > mouse x
+	change y by -5 if y > mouse y

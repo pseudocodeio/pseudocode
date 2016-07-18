@@ -1,0 +1,5 @@
+forever
+	if mouse x < 300
+		draw a red circle at the mouse
+	otherwise
+		draw a blue square at the mouse
