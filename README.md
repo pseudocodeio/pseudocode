@@ -52,15 +52,15 @@ forever draw a small circle at the mouse
 
 - [ ] Get all keywords into expression/Constant.java
 - [ ] Formatting the editor
-- [ ] Console for print output
-- [ ] Add polygons (`draw a polygon from a, b to c, d to e, f`)
+- [√] Console for print output
+- [√] Add polygons (`draw a polygon from a, b to c, d to e, f`)
 - [ ] String interpolation (`print "the value of the variable is $variable and I am at $x, $y"`)
-- [ ] Draw an image from the web (`import "https://image.com/image.png" as xyz` ... `draw xyz at 300, 300`)
+- [√] Draw an image from the web (`import "https://image.com/image.png" as xyz` ... `draw xyz at 300, 300`)
 - [ ] Ensure all files are commented
 - [√] Random numbers
 - [√] Random color
 - [ ] Commenting in the code (`// comment`) - add to Lexer.java, not to Parser.java
-- [ ] Square root and absolute value (`square root of x`, `absolute value of x`)
+- [√] Square root and absolute value (`square root of x`, `absolute value of x`)
 - [√] Distance function (`distance from x, y to a, b`)
 - [ ] Mesh with other
 - [ ] Fix mouse clicked event

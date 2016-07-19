@@ -2,10 +2,12 @@ package instruction;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -18,7 +20,7 @@ public class Draw extends Instruction {
 	private static final double DEFAULT_SIZE = 50;
 	
 	private enum Shape {
-		Circle, Square, Oval, Rectangle, Line, Image
+		Circle, Square, Oval, Rectangle, Line, Image, Polygon
 	};
 	
 	Shape type;
@@ -29,6 +31,11 @@ public class Draw extends Instruction {
 	Color color;
 	boolean randomColor = false;
 	BufferedImage image = null;
+	boolean filled = false;
+	
+	//ArrayList for all the points in a arbitrary polygon
+	ArrayList<Expression> polyx = new ArrayList<Expression>();
+	ArrayList<Expression> polyy = new ArrayList<Expression>();
 	
 	/**
 	 * Constructs a drawing instruction from the given String description of the shape to be drawn.
@@ -47,6 +54,8 @@ public class Draw extends Instruction {
 			type = Shape.Line;
 		if (name.equals("image"))
 			type = Shape.Image;
+		if (name.equals("polygon"))
+			type = Shape.Polygon;
 		color = Color.BLACK;
 	}
 	
@@ -64,6 +73,26 @@ public class Draw extends Instruction {
 	 */
 	public void setY(Expression y) {
 		this.y = y;
+	}
+	
+	/**
+	 * Adds an x coordinate to an array that stores the points of a arbitrary polygon
+	 * @param x - and Expression object describing the x position of a point on a arbitrary polygon
+	 */
+	public void addX(Expression x){
+		this.polyx.add(x);
+	}
+	
+	/**
+	 * Adds an y coordinate to an array that stores the points of a arbitrary polygon
+	 * @param y - and Expression object describing the x position of a point on a arbitrary polygon
+	 */
+	public void addY(Expression y){
+		this.polyy.add(y);
+	}
+	
+	public void isFilled(boolean filled){
+		this.filled = filled;
 	}
 	
 	/**
@@ -168,6 +197,13 @@ public class Draw extends Instruction {
 		double width = (this.width != null) ? this.width.evaluate(algorithm) : DEFAULT_SIZE;
 		double height = (this.height != null) ? this.height.evaluate(algorithm) : DEFAULT_SIZE;
 		
+		//converts the Expression ArrayList for the polygon points into int arrayg
+		int[] polyx = new int[this.polyy.size()];
+		int[] polyy = new int[this.polyy.size()];
+		for(int i = 0;i < polyx.length;i++){
+			polyx[i] = (this.polyx.get(i) != null) ? (int) this.polyx.get(i).evaluate(algorithm) : 0;
+			polyy[i] = (this.polyy.get(i) != null) ? (int) this.polyy.get(i).evaluate(algorithm) : 0;
+		}
 		// Set the drawing color
 		if (randomColor)
 			g.setColor(new Color((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256)));
@@ -190,6 +226,13 @@ public class Draw extends Instruction {
 			break;
 		case Image:
 			g.drawImage(image, (int)x, (int)y, (int)width, (int)height, null);
+			break;
+		case Polygon:
+	        Polygon poly = new Polygon(polyx, polyy, polyx.length);
+	        if(filled)
+	        	g.fillPolygon(poly);
+	        else
+	        	g.drawPolygon(poly);
 			break;
 		}
 	}
@@ -228,6 +271,7 @@ public class Draw extends Instruction {
 		case Oval: return "Window.out.oval(" + x + ", " + y + ", " + width + ", " + height + ");\n";
 		case Rectangle: return "Window.out.rectangle(" + x + ", " + y + ", " + width + ", " + height + ");\n";
 		case Line: return "Window.out.line(" + x + ", " + y + ", " + width + ", " + height + ");\n";
+		case Polygon: return "TODO\n";
 		}
 		return "";
 	}
@@ -245,6 +289,9 @@ public class Draw extends Instruction {
 	}
 	public boolean isImage(){
 		return type == Shape.Image;
+	}
+	public boolean isPolygon(){
+		return type == Shape.Polygon;
 	}
 	
 }

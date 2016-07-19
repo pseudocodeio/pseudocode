@@ -47,7 +47,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 	private static HashMap <String, String> example;
 	private static String[][] exampleCategory = {
-			{ "Basics", "Draw Shapes", "Mouse Coloring" },
+			{ "Basics", "Draw Shapes", "Mouse Coloring", "Random Shapes" },
 			{ "Physics", "Bouncing Ball" }, 
 			{ "Games", "Flappy Bird", "Paddle Bounce", "Mini Golf", "Etch A Sketch" }
 	};

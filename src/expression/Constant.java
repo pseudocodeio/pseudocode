@@ -49,7 +49,10 @@ public class Constant {
 		add("width");
 		add("height");
 		add("size");
+		add("random");
 		add("color");
+		add("randomly");
+		add("colored");
 	}};
 
 	public static HashSet <String> property = new HashSet <String> () {{

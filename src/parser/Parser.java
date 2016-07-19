@@ -23,7 +23,7 @@ public class Parser {
 	private Block rootBlock;			// The root block being parsed
 
 	// The list of shapes that can be drawn.
-	private String[] drawType = { "circle", "square", "rectangle", "oval", "line", "background", "image" };
+	private String[] drawType = { "circle", "square", "rectangle", "oval", "line", "background", "image", "polygon" };
 	private String[] builtInExpression = { "mouse", "random", "square root", "absolute value", "distance" };
 	private String[] specialKeys = {"up", "down", "left", "right", "space"};
 	private static HashSet <String> reservedWords;
@@ -399,6 +399,9 @@ public class Parser {
 	public Instruction parseDraw() {
 		// Caches size input for later
 		Terminal size = null;
+		
+		// Stores weather the polygon will be filled or just outlined
+		boolean filled = false;
 
 		skipNext("a", "an");
 
@@ -409,10 +412,15 @@ public class Parser {
 		Color color = parseColor();
 		boolean randomColor = false;
 		
+		// Polygon filled or outlined
+		if(getNext("filled")){
+			filled = true;
+		}
+		
 		// Random colors
 		if (color == null && getNext("random color", "randomly colored")) {
 			randomColor = true;
-		}
+		}	
 		
 		// Keep looking for a drawing type until the end of the current instruction
 		while (! atDelimiter() && ! peekNext(drawType))
@@ -441,9 +449,25 @@ public class Parser {
 					draw.setImageLocation(getNext());
 				}
 			}
+			
+			//If drawing a arbitrary polygon
+			if(draw.isPolygon()){
+				// Tell weather the polygon is filled or outlined
+				draw.isFilled(filled);
+				skipNext("from");
+				while(peekExpression()){
+					// Gets the x point in the polygon
+					draw.addX(parseExpression());
+					skipNext(",");
+					if(peekExpression())
+						// Gets the y point in the polygon
+						draw.addY(parseExpression());
+					skipNext("to");
+				}
+			}
 
 			// If drawing a line
-			if (draw.isLine()) {
+			else if (draw.isLine()) {
 				// First get the from coordinate
 				if (getNext("from", "going from", "starting at", "starting from")) {
 					if (peekExpression()) draw.setX(parseExpression());
@@ -458,7 +482,6 @@ public class Parser {
 					}
 				}
 			}
-
 			else while (peekNext("at", "with") && ! atDelimiter()) {
 				// Set the coordinates with the "at" keyword
 				if (getNext("at")) {
@@ -745,6 +768,10 @@ public class Parser {
 			else return new RandomTerminal();
 		}
 		return null;
+	}
+	
+	public boolean parseImage(){
+		return false;
 	}
 	
 	public boolean peekDistanceTerminal() {
