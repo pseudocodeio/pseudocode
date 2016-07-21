@@ -32,6 +32,10 @@ public class RGB {
 			Integer.valueOf( hex.substring(5, 7), 16 ));
 	}
 	
+	public static Color fromRGB(){
+		return null;
+	}
+	
 	public static Color getColor(String name) {
 		return color.get(name.toLowerCase().replaceAll("\\s", ""));
 	}

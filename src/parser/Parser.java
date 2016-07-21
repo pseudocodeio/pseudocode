@@ -242,10 +242,22 @@ public class Parser {
 		else if (getNext("invert", "reverse")) {
 			return parseInvert();
 		}
+		
+		// Wait for a certain amount of time
+		else if (getNext("sleep","delay","wait","pause")){
+			return parseWait();
+		}
 
 		return null;
 	}
 
+	private Instruction parseWait(){
+		if(peekExpression()){
+			return new Wait(parseExpression());
+		}
+		return null;
+	}
+	
 	private Instruction parseMath() {
 		if (getNext("add") && peekExpression()) {
 			Expression increment = parseExpression();
@@ -566,11 +578,15 @@ public class Parser {
 	 * @return
 	 */
 	public Color parseColor() {
-		// TODO: Parse hex code
+		// Parse hex code
 		if (peekNext().length() == 7 && peekNext().matches("\\#[0-9a-f]+")) {
 			return RGB.fromHex(getNext());
 		}
-
+		// Parse RGB color
+		if(peekNext("rgb")){
+			skipNext("rgb");
+			
+		}
 		// Try 1 word colors
 		if (RGB.hasColor(peekNext())) {
 			return RGB.getColor(getNext());

@@ -53,6 +53,7 @@ public class Constant {
 		add("color");
 		add("randomly");
 		add("colored");
+		add("number");
 	}};
 
 	public static HashSet <String> property = new HashSet <String> () {{
