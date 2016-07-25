@@ -240,6 +240,17 @@ You can print values
 print x
 ```
 
+### Waiting
+You can pause your program for a certain amount of time
+
+```
+sleep 100
+wait 100
+delay 100
+pause 100
+```
+
+### Functions
 
 
 ## Examples
