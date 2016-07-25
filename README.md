@@ -128,26 +128,70 @@ You can create and use math operators
 
 ```
 set w to 1 plus 2
+	set w to 1 + 2
 set x to 4 minus 2
+	set x to 4 - 2
 set y to 3 times 3
+	set y to 3 * 3
 set z to 5 divided by 1
+	set z to 5 / 1
 ```
 
 You can compare numbers
 ```
 1 is 1 (true)
+	1 == 1
 2 is not 2 (false)
+	2 != 2
 1 greater than 2 (false)
+	1 > 2
 2 is less than 3 (true)
+	2 < 3
 4 greater than or equal to 4 (true)
+	4 ≥ 4
 6 is less than or equal to 5 (false)
+	6 ≤ 5
 ```
 
 You can use multiple operators at the same time
 
 ```
 1 is 1 or 2 is not 2 (true)
-2 is less than or equal to 4 and 4 is not 4 (false)
+2 < 4 and 4 != 4 (false)
+```
+
+### If and if-else statements
+
+You can use if statements with logic operators creating a condition
+
+```
+if x is y
+	draw a circle at 100 100
+```
+
+You can use if-else statements so that code can be run even if your condition is not true
+
+```
+if x is less than y 
+	draw a green square at 50 50 
+else 
+	draw a blue sqaure at 100 100
+	
+if x > y 
+	draw an orange circle at 50 50 
+otherwise 
+	draw a green circle at mouse
+```
+
+You can also compound multiple conditions with else if statements
+
+```
+if x is y 
+	draw a square 
+if x > y 
+	draw a circle 
+else 
+	draw a green square
 ```
 
 ## Examples
