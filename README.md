@@ -118,6 +118,36 @@ You can create infinite loops which can run code forever
 
 ```
 forever draw a small circle at the mouse
+repeatedly draw a big circle at 100 100
+always draw a circle at 50 50
+```
+
+### Operators
+
+You can create and use math operators
+
+```
+set w to 1 plus 2
+set x to 4 minus 2
+set y to 3 times 3
+set z to 5 divided by 1
+```
+
+You can compare numbers
+```
+1 is 1 (true)
+2 is not 2 (false)
+1 greater than 2 (false)
+2 is less than 3 (true)
+4 greater than or equal to 4 (true)
+6 is less than or equal to 5 (false)
+```
+
+You can use multiple operators at the same time
+
+```
+1 is 1 or 2 is not 2 (true)
+2 is less than or equal to 4 and 4 is not 4 (false)
 ```
 
 ## Examples
