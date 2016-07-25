@@ -32,7 +32,7 @@ You can position these shapes
 
 ```
 draw a circle at 100 100
-draw a circlea at the center
+draw a circle at the center
 ```
 
 Their attributes are width, height, radius, size, diameter
