@@ -99,6 +99,14 @@ set background to rgb 255 255 255
 set the background to #fffffff
 ```
 
+### Variables
+You can create variables and assign values to them
+
+```
+set x to 1
+set y to x
+```
+
 ### Random Numbers
 
 You can set random numbers with undefined ranges
@@ -231,6 +239,8 @@ You can print values
 ```
 print x
 ```
+
+
 
 ## Examples
 
