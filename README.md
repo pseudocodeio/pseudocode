@@ -199,6 +199,27 @@ You can use multiple operators at the same time
 2 < 4 and 4 != 4 (false)
 ```
 
+You can find the absolute value of a number
+
+```
+set y to absolute value of -1
+set f to absolute value of g
+```
+
+You can find the square root of a number
+
+```
+set z to square root of 4
+set a to square root of b
+```
+
+You can find the distance between two points
+
+```
+set x to distance from 100,100 to 500,500
+set z to distance from a,b to c,d
+```
+
 ### If and if-else statements
 
 You can use if statements with logic operators creating a condition
