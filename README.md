@@ -91,6 +91,14 @@ draw a randomly colored circle
 draw a random color circle
 ```
 
+You can set the background to preset colors, RGB values, or hex codes
+
+```
+background to green
+set background to rgb 255 255 255
+set the background to #fffffff
+```
+
 ### Random Numbers
 
 You can set random numbers with undefined ranges
@@ -216,7 +224,13 @@ else
 	draw a green square
 ```
 
+### Printing
 
+You can print values
+
+```
+print x
+```
 
 ## Examples
 
