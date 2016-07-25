@@ -105,6 +105,23 @@ set background to rgb 255 255 255
 set the background to #fffffff
 ```
 
+### Mouse Functions
+You can find the x and y positions of the mouse\
+
+```
+set x to mouse x
+set y to mouse y
+```
+
+With shapes, you can set their position to the mouse's position
+
+```
+draw a circle at the mouse
+```
+
+**add mouse clicked**
+
+
 ### Variables
 You can create variables and assign values to them
 
@@ -222,7 +239,7 @@ You can find the distance between two points
 
 ```
 set x to distance from 100,100 to 500,500
-set z to distance from a,b to c,d
+set z to distance from a, b to c, d
 ```
 
 ### If and if-else statements
@@ -289,13 +306,13 @@ You can set multiple parameters
 
 ```
 to functionName with x and y
-to functionName with v , w
+to functionName with v, w
 ```
 
 You can run functions with "do"
 ```
 do functionName with 1
-do functionName with 3 , 4
+do functionName with 3, 4
 ```
 
 ## Examples
