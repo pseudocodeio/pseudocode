@@ -124,7 +124,7 @@ always draw a circle at 50 50
 
 ### Operators
 
-You can create and use math operators
+You can add, subtract, multiply, or divide numbers
 
 ```
 set w to 1 plus 2
@@ -135,6 +135,28 @@ set y to 3 times 3
 	set y to 3 * 3
 set z to 5 divided by 1
 	set z to 5 / 1
+```
+
+You can invert numbers (change their sign)
+
+```
+set x to invert 1
+set x to reverse 2
+```
+
+You can increase numbers by predefined amounts
+
+```
+increment x by 1
+increase y by 5
+change z by 7
+```
+
+You can decrease numbers by predefined amounts
+
+```
+decrement x by 3
+decrease y by 6
 ```
 
 You can compare numbers
@@ -193,6 +215,8 @@ if x > y
 else 
 	draw a green square
 ```
+
+
 
 ## Examples
 
