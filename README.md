@@ -21,7 +21,8 @@ You can draw multiple shapes including circles, squares, rectangles, and ovals. 
 
 ```
 draw a circle
-draw a square
+create a square
+place a circle
 ```
 
 ** put an image of a circle**
@@ -251,7 +252,25 @@ pause 100
 ```
 
 ### Functions
+You can create functions with "to" and set parameters with "with"
+**Not sure about the exact syntax**
+```
+to functionName with x
+	print x
+```
 
+You can set multiple parameters
+
+```
+to functionName with x and y
+to functionName with v , w
+```
+
+You can run functions with "do"
+```
+do functionName with 1
+do functionName with 3 , 4
+```
 
 ## Examples
 
