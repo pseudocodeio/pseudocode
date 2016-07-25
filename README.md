@@ -29,7 +29,64 @@ draw a circle
 You can position this circle 
 
 ```
-draw a circle at the center
+draw a circle at 100 100
+draw a circlea at the center
+```
+
+Its attributes are width, height, radius, size, diameter
+
+```
+draw a circle at 100 100 with a radius of 50
+draw a square at 100 100 with a width of 50 and height of 50 
+```
+
+You can color the shape
+
+```
+draw a red circle
+```
+
+### Drawing images
+
+You can draw an image by giving a url or file path
+
+```
+draw an image "URL"
+draw an image "FILE_PATH"
+```
+
+Images have the same attributes as shapes
+
+```
+draw an image "URL" at 100 100 with a size of 50
+draw an image "URL" at 100 100 with a width of 50 and height of 50
+```
+
+### Colors
+
+You can use preset colors such as blue, green, or light green
+
+```
+draw a red circle
+```
+
+You can use RGB values
+
+```
+draw a rgb 255 0 0 circle
+```
+
+Your can use Hex codes
+
+```
+draw a #fffffff circle
+```
+
+You can use random colors
+
+```
+draw a randomly colored circle
+draw a random color circle
 ```
 
 ### Forever loops
