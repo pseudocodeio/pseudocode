@@ -17,38 +17,40 @@ You can also download a [runnable JAR file](https://github.com/JAR_FILE_URL) tha
 
 ### Drawing shapes
 
-Draw a circle/square/rectangle/oval
+You can draw multiple shapes including circles, squares, rectangles, and ovals. In addition, the many attributes of these shapes can be changed according to your preference.
 
 ```
 draw a circle
+draw a square
 ```
 
 ** put an image of a circle**
 
 
-You can position this circle 
+You can position these shapes 
 
 ```
 draw a circle at 100 100
 draw a circlea at the center
 ```
 
-Its attributes are width, height, radius, size, diameter
+Their attributes are width, height, radius, size, diameter
 
 ```
 draw a circle at 100 100 with a radius of 50
 draw a square at 100 100 with a width of 50 and height of 50 
 ```
 
-You can color the shape
+You can color shapes
 
 ```
 draw a red circle
+draw a green rectangle
 ```
 
 ### Drawing images
 
-You can draw an image by giving a url or file path
+You can draw images by giving a url or file path
 
 ```
 draw an image "URL"
@@ -89,7 +91,30 @@ draw a randomly colored circle
 draw a random color circle
 ```
 
+### Random Numbers
+
+You can set random numbers with undefined ranges
+
+```
+set w to random number
+```
+
+You can set random numbers with a set maximum and a minimum of zero
+
+```
+set x to random number to 100
+```
+
+You can set numbers with predefined ranges
+
+```
+set y to random number between 50 and 100
+set z to random number from 100 to 150
+```
+
 ### Forever loops
+
+You can create infinite loops which can run code forever
 
 ```
 forever draw a small circle at the mouse
