@@ -17,7 +17,7 @@ You can also download a [runnable JAR file](https://github.com/JAR_FILE_URL) tha
 
 ### Drawing shapes
 
-You can draw multiple shapes including circles, squares, rectangles, and ovals. In addition, the many attributes of these shapes can be changed according to your preference.
+You can draw multiple shapes including circles, squares, rectangles, ovals, and polygons. In addition, the many attributes of these shapes can be changed according to your preference.
 
 ```
 draw a circle
@@ -47,6 +47,11 @@ You can color shapes
 ```
 draw a red circle
 draw a green rectangle
+```
+
+You can draw polygons with predefined positions
+```
+draw a polygon from 0, 0 to 100, 100, 0, 50 to 0, 0
 ```
 
 ### Drawing images
