@@ -585,6 +585,16 @@ public class Parser {
 		// Parse RGB color
 		if(peekNext("rgb")){
 			skipNext("rgb");
+			double r = 255;
+			double g = 255;
+			double b = 255;
+			if(peekTerminal())
+				r = parseTerminal().getValue();
+			if(peekTerminal())
+				g = parseTerminal().getValue();
+			if(peekTerminal())
+				b = parseTerminal().getValue();
+			return RGB.fromRGB(r % 256, g % 256, b % 256);
 			
 		}
 		// Try 1 word colors

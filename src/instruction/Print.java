@@ -32,11 +32,28 @@ public class Print extends Instruction {
 	public void execute(Graphics graphics, Block algorithm) {
 		// Print the string value of a StringTerminal expression
 		if (expression instanceof StringTerminal)
-			algorithm.print(((StringTerminal) expression).getStringValue());
+			algorithm.print(evaluateString(((StringTerminal) expression).getStringValue(), algorithm));
 		
 		// Otherwise print the evaluated value of the expression.
 		else 
 			algorithm.print("" + expression.evaluate(algorithm));
+	}
+	
+	/**
+	 * Returns the print String with all interpolated variables as their values.
+	 */
+	public String evaluateString(String text, Block algorithm){
+		String words[] = text.split(" ");
+		String print = "";
+		for(String i: words){
+			if(i.startsWith("#")){
+				i = i.substring(1);
+				i = Double.toString(algorithm.get(i));
+			}
+			print += i + " ";
+		}
+		return print;
+		
 	}
 	
 	/**

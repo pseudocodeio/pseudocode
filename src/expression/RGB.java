@@ -32,8 +32,8 @@ public class RGB {
 			Integer.valueOf( hex.substring(5, 7), 16 ));
 	}
 	
-	public static Color fromRGB(){
-		return null;
+	public static Color fromRGB(double r,double g, double b){
+		return new Color((int)r, (int)g, (int)b);
 	}
 	
 	public static Color getColor(String name) {
