@@ -45,6 +45,7 @@ public class Editor extends JPanel implements KeyListener {
 	private static final Color number = RGB.fromHex("#673AB7");	
 	private static final Color operator = RGB.fromHex("#F44336");
 	private static final Color string = RGB.fromHex("#FFC107");
+	private static final Color comment = RGB.fromHex("#26A65B");
 	
 	private static Lexer lexer;
 	
@@ -93,8 +94,9 @@ public class Editor extends JPanel implements KeyListener {
 		// Go to every line
 		for (String line : lines) {
 			// Split the line into tokens
-			String[] tokens = lexer.lex(line, true);
+			String[] tokens = lexer.lex(line, true, false);
 			boolean firstToken = true;
+			boolean comment = false;
 			
 			// Go to each token
 			for (int i = 0 ; i < tokens.length ; i++) {
@@ -109,17 +111,35 @@ public class Editor extends JPanel implements KeyListener {
 				
 				// Conditions to determine a special syntax highlighting style
 				// TODO: add more styles
-				if (firstToken && Constant.keyword.contains(token))
-					style = "keyword";
-				else if (Constant.operator.contains(token)) 
-					style = "operator";
-				else if (Constant.attribute.contains(token))
-					style = "attribute";
-				else if (token.matches("\\d+(|\\.\\d*)"))
-					style = "number";
-				else if (token.startsWith("\"") && token.endsWith("\""))
-					style = "string";
+				if(!comment){
+					if (firstToken && Constant.keyword.contains(token))
+						style = "keyword";
+					else if (token.matches("/")){
+						i++;
+						if(i < tokens.length && tokens[i].equals("/")){
+							comment = true;
+							style = "comment";
+						}
+						else
+							style = "operator";
+						i--;
+					}
+					else if (Constant.operator.contains(token)) 
+						style = "operator";
+					else if (Constant.attribute.contains(token))
+						style = "attribute";
+					else if (token.matches("\\d+(|\\.\\d*)"))
+						style = "number";
+					else if (token.startsWith("\"") && token.endsWith("\""))
+						style = "string";
+				}
+				else{
+					if(token.matches("\n"))
+						comment = false;
+					style = "comment";
+				}
 				
+	
 				// If a style was found, then apply it to this section
 				if (style != null) {
 					document.setCharacterAttributes(position, token.length(), area.getStyle(style), true);
@@ -147,6 +167,7 @@ public class Editor extends JPanel implements KeyListener {
 		addStyle("number", number, false, false);
 		addStyle("string", string, false, false);
 		addStyle("operator", operator, false, false);
+		addStyle("comment", comment, false, false);
 		//addStyle("operator", Color.RED, false, false);
 	}
 	
