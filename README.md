@@ -295,7 +295,7 @@ delay 100
 pause 100
 ```
 
-### Functions
+### Functions **Check for correct syntax**
 You can create functions with "to" and set parameters with "with"
 **Not sure about the exact syntax**
 ```
