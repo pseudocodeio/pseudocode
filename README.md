@@ -11,44 +11,52 @@ There is no "run" button and no error messages - code is executed as you type it
 
 For Mac OSX, the easiest way to get started is to download the [Pseudocode application](https://github.com/MAC_APP_URL) and copy it into your Applications folder.
 
-You can also download a [runnable JAR file](https://github.com/JAR_FILE_URL) that will work on any operating system with a Java runtime environment.
+You can also download a [runnable JAR file](https://github.com/pseudocodeio/pseudocode/files/384411/Pseudocode.zip) that will work on any operating system with a Java runtime environment.
 
 ## Features
 
 ### Drawing shapes
 
-Draw a circle/square/rectangle/oval
+You can draw multiple shapes including circles, squares, rectangles, ovals, and polygons. In addition, the many attributes of these shapes can be changed according to your preference.
 
 ```
 draw a circle
+create a square
+place a circle
+put a rectangle
 ```
 
-** put an image of a circle**
+![picture of a circle](https://cloud.githubusercontent.com/assets/15526754/17146861/e7ca37da-5314-11e6-89df-c77c9d949f48.png)
 
-
-You can position this circle 
+You can position these shapes 
 
 ```
 draw a circle at 100 100
-draw a circlea at the center
+draw a circle at the center
 ```
 
-Its attributes are width, height, radius, size, diameter
+Their attributes are width, height, radius, size, diameter
 
 ```
 draw a circle at 100 100 with a radius of 50
 draw a square at 100 100 with a width of 50 and height of 50 
 ```
 
-You can color the shape
+You can color shapes
 
 ```
 draw a red circle
+draw a green rectangle
+```
+
+You can draw polygons with predefined positions
+```
+draw a polygon from 0, 0 to 100, 100, 0, 50 to 0, 0
 ```
 
 ### Drawing images
 
-You can draw an image by giving a url or file path
+You can draw images by giving a url or file path
 
 ```
 draw an image "URL"
@@ -89,10 +97,223 @@ draw a randomly colored circle
 draw a random color circle
 ```
 
+You can set the background to preset colors, RGB values, or hex codes
+
+```
+background to green
+set background to rgb 255 255 255
+set the background to #fffffff
+```
+
+### Mouse Functions
+You can find the x and y positions of the mouse
+
+```
+set x to mouse x
+set y to mouse y
+```
+
+With shapes, you can set their position to the mouse's position
+
+```
+draw a circle at the mouse
+draw a circle at mouse x mouse y
+```
+
+**add mouse clicked**
+
+
+### Variables
+You can create variables and assign values to them
+
+```
+set x to 1
+set y to x
+```
+
+### Random Numbers
+
+You can set random numbers with undefined ranges
+
+```
+set w to random number
+```
+
+You can set random numbers with a set maximum and a minimum of zero
+
+```
+set x to random number to 100
+```
+
+You can set numbers with predefined ranges
+
+```
+set y to random number between 50 and 100
+set z to random number from 100 to 150
+```
+
 ### Forever loops
+
+You can create infinite loops which can run code forever
 
 ```
 forever draw a small circle at the mouse
+repeatedly draw a big circle at 100 100
+always draw a circle at 50 50
+```
+
+### Operators
+
+You can add, subtract, multiply, or divide numbers
+
+```
+set w to 1 plus 2
+	set w to 1 + 2
+set x to 4 minus 2
+	set x to 4 - 2
+set y to 3 times 3
+	set y to 3 * 3
+set z to 5 divided by 1
+	set z to 5 / 1
+```
+
+You can invert numbers (change their sign)
+
+```
+set x to invert 1
+set x to reverse 2
+```
+
+You can increase numbers by predefined amounts
+
+```
+increment x by 1
+increase y by 5
+change z by 7
+```
+
+You can decrease numbers by predefined amounts
+
+```
+decrement x by 3
+decrease y by 6
+```
+
+You can compare numbers
+```
+1 is 1 (true)
+	1 == 1
+2 is not 2 (false)
+	2 != 2
+1 greater than 2 (false)
+	1 > 2
+2 is less than 3 (true)
+	2 < 3
+4 greater than or equal to 4 (true)
+	4 ≥ 4
+6 is less than or equal to 5 (false)
+	6 ≤ 5
+```
+
+You can use multiple operators at the same time
+
+```
+1 is 1 or 2 is not 2 (true)
+2 < 4 and 4 != 4 (false)
+```
+
+You can find the absolute value of a number
+
+```
+set y to absolute value of -1
+set f to absolute value of g
+```
+
+You can find the square root of a number
+
+```
+set z to square root of 4
+set a to square root of b
+```
+
+You can find the distance between two points
+
+```
+set x to distance from 100,100 to 500,500
+set z to distance from a, b to c, d
+```
+
+### If and if-else statements
+
+You can use if statements with logic operators creating a condition
+
+```
+if x is y
+	draw a circle at 100 100
+```
+
+You can use if-else statements so that code can be run even if your condition is not true
+
+```
+if x is less than y 
+	draw a green square at 50 50 
+else 
+	draw a blue sqaure at 100 100
+	
+if x > y 
+	draw an orange circle at 50 50 
+otherwise 
+	draw a green circle at mouse
+```
+
+You can also compound multiple conditions with else if statements
+
+```
+if x is y 
+	draw a square 
+if x > y 
+	draw a circle 
+else 
+	draw a green square
+```
+
+### Printing
+
+You can print values
+
+```
+print x
+```
+
+### Waiting
+You can pause your program for a certain amount of time
+
+```
+sleep 100
+wait 100
+delay 100
+pause 100
+```
+
+### Functions **Check for correct syntax**
+You can create functions with "to" and set parameters with "with"
+**Not sure about the exact syntax**
+```
+to functionName with x
+	print x
+```
+
+You can set multiple parameters
+
+```
+to functionName with x and y
+to functionName with v, w
+```
+
+You can run functions with "do"
+```
+do functionName with 1
+do functionName with 3, 4
 ```
 
 ## Examples
