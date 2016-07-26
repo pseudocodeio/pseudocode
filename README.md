@@ -25,8 +25,7 @@ create a square
 place a circle
 ```
 
-** put an image of a circle**
-
+![picture of a circle](https://cloud.githubusercontent.com/assets/15526754/17146861/e7ca37da-5314-11e6-89df-c77c9d949f48.png)
 
 You can position these shapes 
 
