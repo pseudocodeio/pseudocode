@@ -106,7 +106,7 @@ set the background to #fffffff
 ```
 
 ### Mouse Functions
-You can find the x and y positions of the mouse\
+You can find the x and y positions of the mouse
 
 ```
 set x to mouse x
@@ -117,6 +117,7 @@ With shapes, you can set their position to the mouse's position
 
 ```
 draw a circle at the mouse
+draw a circle at mouse x mouse y
 ```
 
 **add mouse clicked**
