@@ -23,6 +23,7 @@ You can draw multiple shapes including circles, squares, rectangles, ovals, and 
 draw a circle
 create a square
 place a circle
+put a rectangle
 ```
 
 ![picture of a circle](https://cloud.githubusercontent.com/assets/15526754/17146861/e7ca37da-5314-11e6-89df-c77c9d949f48.png)
