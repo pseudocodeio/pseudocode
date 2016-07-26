@@ -11,7 +11,7 @@ There is no "run" button and no error messages - code is executed as you type it
 
 For Mac OSX, the easiest way to get started is to download the [Pseudocode application](https://github.com/MAC_APP_URL) and copy it into your Applications folder.
 
-You can also download a [runnable JAR file](https://github.com/JAR_FILE_URL) that will work on any operating system with a Java runtime environment.
+You can also download a [runnable JAR file](https://github.com/pseudocodeio/pseudocode/files/384411/Pseudocode.zip) that will work on any operating system with a Java runtime environment.
 
 ## Features
 
