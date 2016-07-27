@@ -344,7 +344,7 @@ do functionName with 3, 4
 - [ ] Fix mouse clicked event
 - [√] Arbitrary RGB colors (`draw an rgb 1, 2, 3 square`) and hex codes*
 - [ ] Parser tests - test individual parsing routines
-
+- [ ] Allow images to be objects
 * in the Window.java library
 
 ## Future todo list
