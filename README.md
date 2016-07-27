@@ -84,7 +84,7 @@ You can use RGB values
 draw a rgb 255 0 0 circle
 ```
 
-Your can use Hex codes
+You can use Hex codes
 
 ```
 draw a #fffffff circle
