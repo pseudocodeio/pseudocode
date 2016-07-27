@@ -302,7 +302,6 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	 */
 	private void quit() {
 					
-		if(currentFile.exists()){
 			File file= new File(filePath);
 			
 			if(pseudocode.getText().equals(readFile(file))){
@@ -323,7 +322,6 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 				//if cancel is clicked
 				else{}
 			}
-		}
 		
 	}
 
@@ -425,8 +423,29 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	 * @param exampleName
 	 */
 	private void openExample(String exampleName) {
-		// TODO: check for unsaved changes
-		System.out.println(example.get(exampleName));
-		pseudocode.updateText(example.get(exampleName));
+		
+		File file= new File(filePath);
+		
+		if(pseudocode.getText().equals(readFile(file))){
+			System.out.println(example.get(exampleName));
+			pseudocode.updateText(example.get(exampleName));
+		}
+		else{
+			int quitResult = JOptionPane.showConfirmDialog(this, "Save changes?");
+			
+			//if yes is clicked
+			if(quitResult==0){
+				saveFile();
+				System.out.println(example.get(exampleName));
+				pseudocode.updateText(example.get(exampleName));			}
+			//if no is clicked
+			else if(quitResult==1){
+				System.out.println(example.get(exampleName));
+				pseudocode.updateText(example.get(exampleName));			}
+			//if cancel is clicked
+			else{}
+		}
+		
+		
 	}
 }
