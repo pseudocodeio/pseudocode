@@ -132,14 +132,6 @@ set x to 1
 set y to x
 ```
 
-You can print variables within text
-
-```
-set x to 5
-
-print "The dog jumped over the quick brown fox by #x meters"
-```
-
 
 ### Random Numbers
 
@@ -178,13 +170,16 @@ You can add, subtract, multiply, or divide numbers
 
 ```
 set w to 1 plus 2
-	set w to 1 + 2
+set w to 1 + 2
+
 set x to 4 minus 2
-	set x to 4 - 2
+set x to 4 - 2
+
 set y to 3 times 3
-	set y to 3 * 3
+set y to 3 * 3
+
 set z to 5 divided by 1
-	set z to 5 / 1
+set z to 5 / 1
 ```
 
 You can invert numbers (change their sign)
@@ -211,18 +206,23 @@ decrease y by 6
 
 You can compare numbers
 ```
-1 is 1 (true)
-	1 == 1
-2 is not 2 (false)
-	2 != 2
-1 greater than 2 (false)
-	1 > 2
-2 is less than 3 (true)
-	2 < 3
-4 greater than or equal to 4 (true)
-	4 ≥ 4
+1 is 1  
+1 == 1 (true)
+
+2 is not 2 
+2 != 2 (false)
+
+1 greater than 2 
+1 > 2 (false)
+
+2 is less than 3 
+2 < 3 (true)
+
+4 greater than or equal to 4 
+4 ≥ 4 (true)
+
 6 is less than or equal to 5 (false)
-	6 ≤ 5
+6 ≤ 5 (true)
 ```
 
 You can use multiple operators at the same time
@@ -295,7 +295,16 @@ You can print values
 print x
 ```
 
-### Waiting
+You can print variables within text
+
+```
+set x to 5
+
+print "The dog jumped over the quick brown fox by #x meters"
+```
+
+
+### Waiting **Not Currently Working**
 You can pause your program for a certain amount of time
 
 ```
