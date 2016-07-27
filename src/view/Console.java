@@ -55,7 +55,7 @@ public class Console extends JFrame {
 	}
 	
 	public void error(String message) {
-		// TODO: special highlighting color (future)
+		//TODO: special highlighting color
 		print(message);
 	}
 }
