@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.swing.JPanel;
@@ -48,6 +49,8 @@ public class Editor extends JPanel implements KeyListener {
 	private static final Color comment = RGB.fromHex("#26A65B");
 	
 	private static Lexer lexer;
+	
+	private static ArrayList<String> undoText = new ArrayList<String>();
 	
 	/**
 	 * Constructs the editor.
@@ -241,9 +244,22 @@ public class Editor extends JPanel implements KeyListener {
 			pseudocode.update(area.getText());
 		}
 		format();
+		
+		if(e.getKeyCode()==KeyEvent.VK_SPACE||e.getKeyCode()==KeyEvent.VK_ENTER){
+			//log all the text in the editor to a new instance in the array list undoText
+			undoText.add(area.getText());
+		}
+		
 	}
 	
 	public void keyTyped(KeyEvent e) {}
 	public void keyPressed(KeyEvent e) {}
 	
+	public ArrayList<String> returnUndoText(){
+		return undoText;
+	}
+	public void setUndoText(ArrayList<String> input){
+		undoText=input;
+		
+	}
 }

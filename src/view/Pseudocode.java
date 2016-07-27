@@ -3,6 +3,8 @@ package view;
 import java.awt.GridLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -99,5 +101,14 @@ public class Pseudocode extends JFrame {
 	
 	public String getText() {
 		return editor.getText();
+	}	
+	
+	public ArrayList<String> returnUndoText(){
+		return editor.returnUndoText();
 	}
+	
+	public void setUndoText(ArrayList<String> input){
+		editor.setUndoText(input);
+	}
+	
 }

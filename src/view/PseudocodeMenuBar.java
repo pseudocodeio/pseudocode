@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -51,7 +52,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			{ "Physics", "Bouncing Ball" }, 
 			{ "Games", "Flappy Bird", "Paddle Bounce", "Mini Golf", "Etch A Sketch" }
 	};
-	
+
 	//This string is the file path of the pseudocode program
 	private static String filePath="";
 
@@ -63,7 +64,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 	// The FileFilter object that is used to filter non-pseudocode files from being opened.
 	private FileFilter pseudocodeFilter = new FileFilter() {
-		
+
 		/**
 		 * Returns true if the given File object represents a valid pseudocode file.
 		 */
@@ -103,6 +104,11 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		fileMenu.add(createMenuItem("Save As"));
 		fileMenu.add(createMenuItem("Quit", 'Q'));
 		add(fileMenu);
+
+		JMenu editMenu = createMenu("Edit");
+		editMenu.add(createMenuItem("Undo", 'Z'));
+		editMenu.add(createMenuItem("Redo", 'Y'));
+		add(editMenu);
 
 		JMenu meshMenu = createMenu("Mesh");
 		mesh = createMenuItem("Start Mesh", 'M');
@@ -277,6 +283,10 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		else if (command.equals("Save As")) saveFileAs();
 		else if (command.equals("Quit")) quit();
 
+		// Edit commands
+		else if(command.equals("Undo")) undo();
+		else if (command.equals("Redo")) redo();
+
 		// Mesh commands
 		else if (command.equals("Start Mesh")) {
 			pseudocode.interpreter.startMesh();
@@ -303,29 +313,29 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	 * Quits the current pseudocode editor.
 	 */
 	private void quit() {
-					
-			File file= new File(filePath);
-			
-			//if there are no unsaved changes
-			if(pseudocode.getText().equals(readFile(file))){
+
+		File file= new File(filePath);
+
+		//if there are no unsaved changes
+		if(pseudocode.getText().equals(readFile(file))){
+			pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
+		}
+		else{
+			int quitResult = JOptionPane.showConfirmDialog(this, "Save changes before quitting?");
+
+			//if yes is clicked
+			if(quitResult==0){
+				saveFile();
 				pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
 			}
-			else{
-				int quitResult = JOptionPane.showConfirmDialog(this, "Save changes before quitting?");
-				
-				//if yes is clicked
-				if(quitResult==0){
-					saveFile();
-					pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
-				}
-				//if no is clicked
-				else if(quitResult==1){
-					pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
-				}
-				//if cancel is clicked
-				else{}
+			//if no is clicked
+			else if(quitResult==1){
+				pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
 			}
-		
+			//if cancel is clicked
+			else{}
+		}
+
 	}
 
 	/**
@@ -342,9 +352,9 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		// If the user selected a file to open, get the File object
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			currentFile = chooser.getSelectedFile();
-			
+
 			filePath=chooser.getSelectedFile().getAbsolutePath();
-			
+
 			// Check if this is a valid file, and if it is, update the pseudocode editor
 			// with the String contents of the file.
 			if (currentFile.exists()) {
@@ -353,7 +363,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		}
 		//Clears oldExampleName as an example is no longer open
 		oldExampleName="";
-		
+
 	}
 
 	/**
@@ -366,7 +376,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 					currentFile.createNewFile();
 				} catch (IOException e) {}
 			}
-			
+
 			// Write to the file.
 			try {
 				FileWriter fw = new FileWriter(currentFile.getAbsoluteFile());
@@ -390,14 +400,14 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 		// Get the result of an open dialog.
 		int choice = chooser.showSaveDialog(pseudocode);
-		
+
 		// If the user selected a file to open, get the File object
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			currentFile = chooser.getSelectedFile();
-			
+
 			// Appends a .pseudo extension to the file
 			if (! currentFile.getAbsolutePath().endsWith(".pseudo") &&
-				! currentFile.getAbsolutePath().endsWith(".txt")) {
+					! currentFile.getAbsolutePath().endsWith(".txt")) {
 				currentFile = new File(currentFile.getAbsolutePath() + ".pseudo");
 			}
 
@@ -411,7 +421,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 					return;
 				}
 			}
-			
+
 			// Write the file to the given File object.
 			try {
 				FileWriter fw = new FileWriter(currentFile.getAbsoluteFile());
@@ -429,14 +439,14 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	 * @param exampleName
 	 */
 	private void openExample(String exampleName) {
-		
+
 		File file= new File(filePath);
-		
+
 		if(pseudocode.getText().equals(example.get(oldExampleName))){
 			System.out.println(example.get(exampleName));
 			pseudocode.updateText(example.get(exampleName));
 		}
-		
+
 		//if there are no unsaved changes
 		else if(pseudocode.getText().equals(readFile(file))){
 			System.out.println(example.get(exampleName));
@@ -444,7 +454,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		}
 		else{
 			int quitResult = JOptionPane.showConfirmDialog(this, "Save changes?");
-			
+
 			//if yes is clicked
 			if(quitResult==0){
 				saveFile();
@@ -457,9 +467,41 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			//if cancel is clicked
 			else{}
 		}
-		
+
 		//sets the old example name to the current in order to prepare for a switch of examples
 		oldExampleName=exampleName;
-		
+
 	}
+
+	private void undo(){
+		ArrayList<String> undoText = new ArrayList<String>();
+		undoText=pseudocode.returnUndoText();
+		if(pseudocode.getText().equals(undoText.get(undoText.size()-1))){
+			try{
+				pseudocode.updateText((undoText.get(undoText.size()-2)).toString());
+			}
+			catch(Exception e){
+				pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
+			}
+		}
+		else{
+			undoText.add(pseudocode.getText());
+			try{
+				pseudocode.updateText((undoText.get(undoText.size()-2)).toString());
+			}
+			catch(Exception e){
+				pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
+			}
+		}
+		undoText.remove(undoText.size()-1);
+		pseudocode.setUndoText(undoText);
+
+
+	}
+
+	private void redo(){
+
+	}
+
+
 }
