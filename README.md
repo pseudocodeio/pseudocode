@@ -345,6 +345,7 @@ do functionName with 3, 4
 - [√] Arbitrary RGB colors (`draw an rgb 1, 2, 3 square`) and hex codes*
 - [ ] Parser tests - test individual parsing routines
 - [ ] Allow images to be objects
+- [ ] Allow gifs to be drawn
 * in the Window.java library
 
 ## Future todo list
