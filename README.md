@@ -124,12 +124,22 @@ draw a circle at mouse x mouse y
 
 
 ### Variables
+
 You can create variables and assign values to them
 
 ```
 set x to 1
 set y to x
 ```
+
+You can print variables within text
+
+```
+set x to 5
+
+print "The dog jumped over the quick brown fox by #x meters"
+```
+
 
 ### Random Numbers
 
