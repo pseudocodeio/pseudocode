@@ -51,6 +51,10 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			{ "Physics", "Bouncing Ball" }, 
 			{ "Games", "Flappy Bird", "Paddle Bounce", "Mini Golf", "Etch A Sketch" }
 	};
+	
+	//This string is the file path of the pseudocode program
+	private static String filePath="";
+
 
 	// The menu item that shows the current mesh
 	private static JMenuItem mesh;
@@ -297,8 +301,30 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	 * Quits the current pseudocode editor.
 	 */
 	private void quit() {
-		// TODO: check if work is unsaved
-		pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
+					
+		if(currentFile.exists()){
+			File file= new File(filePath);
+			
+			if(pseudocode.getText().equals(readFile(file))){
+				pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
+			}
+			else{
+				int quitResult = JOptionPane.showConfirmDialog(this, "Save changes before quitting?");
+				
+				//if yes is clicked
+				if(quitResult==0){
+					saveFile();
+					pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
+				}
+				//if no is clicked
+				else if(quitResult==1){
+					pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
+				}
+				//if cancel is clicked
+				else{}
+			}
+		}
+		
 	}
 
 	/**
@@ -315,7 +341,9 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		// If the user selected a file to open, get the File object
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			currentFile = chooser.getSelectedFile();
-
+			
+			filePath=chooser.getSelectedFile().getAbsolutePath();
+			
 			// Check if this is a valid file, and if it is, update the pseudocode editor
 			// with the String contents of the file.
 			if (currentFile.exists()) {
