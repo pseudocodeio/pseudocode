@@ -110,7 +110,7 @@ public class Editor extends JPanel implements KeyListener {
 				String style = null;
 				
 				// Conditions to determine a special syntax highlighting style
-				// TODO: add more styles
+				// TODO: add more styles (future)
 				if(!comment){
 					if (firstToken && Constant.keyword.contains(token))
 						style = "keyword";

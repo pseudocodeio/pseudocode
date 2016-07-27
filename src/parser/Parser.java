@@ -574,7 +574,6 @@ public class Parser {
 
 	/**
 	 * Parses a color.
-	 * TODO: use dictionary of all Window colors
 	 * @return
 	 */
 	public Color parseColor() {
@@ -621,6 +620,7 @@ public class Parser {
 		if (getNext("light gray")) return Color.LIGHT_GRAY;
 		if (getNext("pink")) return Color.PINK;
 		if (getNext("white")) return Color.WHITE;
+		
 		return null;
 	}
 

@@ -55,6 +55,8 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	//This string is the file path of the pseudocode program
 	private static String filePath="";
 
+	//This string stores the last used example program's name
+	private static String oldExampleName="";
 
 	// The menu item that shows the current mesh
 	private static JMenuItem mesh;
@@ -304,6 +306,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 					
 			File file= new File(filePath);
 			
+			//if there are no unsaved changes
 			if(pseudocode.getText().equals(readFile(file))){
 				pseudocode.dispatchEvent(new WindowEvent(pseudocode, WindowEvent.WINDOW_CLOSING));
 			}
@@ -348,6 +351,9 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 				pseudocode.updateText(readFile(currentFile));
 			}
 		}
+		//Clears oldExampleName as an example is no longer open
+		oldExampleName="";
+		
 	}
 
 	/**
@@ -426,7 +432,13 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		
 		File file= new File(filePath);
 		
-		if(pseudocode.getText().equals(readFile(file))){
+		if(pseudocode.getText().equals(example.get(oldExampleName))){
+			System.out.println(example.get(exampleName));
+			pseudocode.updateText(example.get(exampleName));
+		}
+		
+		//if there are no unsaved changes
+		else if(pseudocode.getText().equals(readFile(file))){
 			System.out.println(example.get(exampleName));
 			pseudocode.updateText(example.get(exampleName));
 		}
@@ -446,6 +458,8 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			else{}
 		}
 		
+		//sets the old example name to the current in order to prepare for a switch of examples
+		oldExampleName=exampleName;
 		
 	}
 }
