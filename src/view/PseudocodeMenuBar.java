@@ -476,28 +476,32 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	private void undo(){
 		ArrayList<String> undoText = new ArrayList<String>();
 		undoText=pseudocode.returnUndoText();
+	try{
 		if(pseudocode.getText().equals(undoText.get(undoText.size()-1))){
+			undoText.remove(undoText.size()-1);
 			try{
-				pseudocode.updateText((undoText.get(undoText.size()-2)).toString());
-			}
-			catch(Exception e){
 				pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
 			}
+			catch(Exception e){}
 		}
 		else{
-			undoText.add(pseudocode.getText());
 			try{
-				pseudocode.updateText((undoText.get(undoText.size()-2)).toString());
-			}
-			catch(Exception e){
 				pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
 			}
+			catch(Exception e){}
 		}
-		undoText.remove(undoText.size()-1);
-		pseudocode.setUndoText(undoText);
-
-
+		
 	}
+	catch(Exception e){
+		pseudocode.updateText("");
+		pseudocode.setUndoText(undoText);
+		return;
+	}
+	if(undoText.size()>0)
+		undoText.remove(undoText.size()-1);
+	
+		pseudocode.setUndoText(undoText);
+}
 
 	private void redo(){
 
