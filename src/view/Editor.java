@@ -50,6 +50,7 @@ public class Editor extends JPanel implements KeyListener {
 	
 	private static Lexer lexer;
 	
+	//The undo text storage array list
 	private static ArrayList<String> undoText = new ArrayList<String>();
 	
 	/**

@@ -61,9 +61,13 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 	// The menu item that shows the current mesh
 	private static JMenuItem mesh;
+	
+	//The redo text storage array (stores the data needed to redo)
+	private static ArrayList<String> redoText = new ArrayList<String>();
 
 	// The FileFilter object that is used to filter non-pseudocode files from being opened.
 	private FileFilter pseudocodeFilter = new FileFilter() {
+		
 
 		/**
 		 * Returns true if the given File object represents a valid pseudocode file.
@@ -476,11 +480,13 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	private void undo(){
 		ArrayList<String> undoText = new ArrayList<String>();
 		undoText=pseudocode.returnUndoText();
+		redoText.add(pseudocode.getText());
 	try{
 		if(pseudocode.getText().equals(undoText.get(undoText.size()-1))){
 			undoText.remove(undoText.size()-1);
 			try{
 				pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
+				
 			}
 			catch(Exception e){}
 		}
@@ -504,7 +510,13 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 }
 
 	private void redo(){
-
+		try{
+			pseudocode.updateText(redoText.get(redoText.size()-1));
+			redoText.remove(redoText.size()-1);
+		}
+		catch(Exception e){
+			pseudocode.updateText("");
+		}
 	}
 
 
