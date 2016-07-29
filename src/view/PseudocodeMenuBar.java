@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -18,7 +20,6 @@ import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
@@ -30,8 +31,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
+
 
 /**
  * 
@@ -149,6 +150,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		JMenu editMenu = createMenu("Edit");
 		editMenu.add(createMenuItem("Undo", 'Z'));
 		editMenu.add(createMenuItem("Redo", 'Y'));
+		editMenu.add(createMenuItem("Find",'F'));
 		add(editMenu);
 
 		JMenu meshMenu = createMenu("Mesh");
@@ -330,8 +332,9 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		else if (command.equals("Quit")) quit();
 
 		// Edit commands
-		else if(command.equals("Undo")) undo();
+		else if (command.equals("Undo")) undo();
 		else if (command.equals("Redo")) redo();
+		else if (command.equals("Find")) find();
 
 		// Mesh commands
 		else if (command.equals("Start Mesh")) {
@@ -397,16 +400,41 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 		// If the user selected a file to open, get the File object
 		if (choice == JFileChooser.APPROVE_OPTION) {
-			currentFile = chooser.getSelectedFile();
+			
+			File file= new File(filePath);
 
+			//if there are no unsaved changes
+			if(pseudocode.getText().equals(readFile(file))){
+				if (currentFile.exists()) 
+					pseudocode.updateText(readFile(currentFile));
+			}
+			else{
+				int quitResult = JOptionPane.showConfirmDialog(this, "Save changes before quitting?");
+
+				//if yes is clicked
+				if(quitResult==0){
+					saveFile();
+					
+				}
+				//if no is clicked
+				else if(quitResult==1){
+					
+				}
+				//if cancel is clicked
+				else{
+					return;
+				}
+			}
+			
+			currentFile = chooser.getSelectedFile();
+			
 			filePath=chooser.getSelectedFile().getAbsolutePath();
 			
-		
+			if (currentFile.exists()) 
+				pseudocode.updateText(readFile(currentFile));		
 			
 			// Check if this is a valid file, and if it is, update the pseudocode editor
 			// with the String contents of the file.
-			if (currentFile.exists()) {
-				pseudocode.updateText(readFile(currentFile));
 				
 				
 				if(openCounter==0){
@@ -471,7 +499,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 					openRecent.add(open5);
 				}
 				
-			}
+			
 		}
 		//Clears oldExampleName as an example is no longer open
 		oldExampleName="";
@@ -659,6 +687,11 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		}
 		pseudocode.addUndoText(pseudocode.getText());
 	}
+	
+	private void find(){
+		
+	}
+
 
 
 }

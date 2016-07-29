@@ -8,9 +8,13 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -260,11 +264,11 @@ public class Editor extends JPanel implements KeyListener {
 		return undoText;
 	}
 	public void setUndoText(ArrayList<String> input){
-		undoText=input;
-		
+		undoText=input;	
 	}
 	
 	public void addUndoText(String input){
 		undoText.add(input);
 	}
+	
 }
