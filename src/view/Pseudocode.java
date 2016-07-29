@@ -111,4 +111,7 @@ public class Pseudocode extends JFrame {
 		editor.setUndoText(input);
 	}
 	
+	public void addUndoText(String input){
+		editor.addUndoText(input);
+	}
 }

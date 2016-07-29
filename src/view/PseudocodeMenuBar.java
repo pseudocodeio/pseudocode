@@ -647,6 +647,9 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 }
 
 	private void redo(){
+		
+		pseudocode.addUndoText(pseudocode.getText());
+		
 		try{
 			pseudocode.updateText(redoText.get(redoText.size()-1));
 			redoText.remove(redoText.size()-1);
@@ -654,6 +657,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		catch(Exception e){
 			pseudocode.updateText("");
 		}
+		pseudocode.addUndoText(pseudocode.getText());
 	}
 
 
