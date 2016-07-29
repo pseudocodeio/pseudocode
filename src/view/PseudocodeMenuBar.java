@@ -30,6 +30,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 /**
@@ -64,10 +65,23 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	
 	//The redo text storage array (stores the data needed to redo)
 	private static ArrayList<String> redoText = new ArrayList<String>();
+	
+	//This holds all the recently opened files
+	private static ArrayList<String> openedFilePaths = new ArrayList<String>();
+	
+	//Counts the number of opened files for open recent
+	int openCounter=0;
+	
+	//Setting up the menu and menu items for open recent
+	JMenu openRecent = createMenu("Open Recent");
+	JMenuItem open1 = new JMenuItem();
+	JMenuItem open2 = new JMenuItem();
+	JMenuItem open3 = new JMenuItem();
+	JMenuItem open4 = new JMenuItem();
+	JMenuItem open5 = new JMenuItem();
 
 	// The FileFilter object that is used to filter non-pseudocode files from being opened.
 	private FileFilter pseudocodeFilter = new FileFilter() {
-		
 
 		/**
 		 * Returns true if the given File object represents a valid pseudocode file.
@@ -104,6 +118,29 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		JMenu fileMenu = createMenu("File");
 		fileMenu.add(createMenuItem("New", 'N'));
 		fileMenu.add(createMenuItem("Open", 'O'));
+		
+		//Adding the open recent menu
+		openRecent.setFont(font);
+		
+		//Creating the action listeners and action commands for the submenu items
+		open1.addActionListener(this);
+		open1.setActionCommand("open1");
+		
+		open2.addActionListener(this);
+		open2.setActionCommand("open2");
+		
+		open3.addActionListener(this);
+		open3.setActionCommand("open3");
+		
+		open4.addActionListener(this);
+		open4.setActionCommand("open4");
+		
+		open5.addActionListener(this);
+		open5.setActionCommand("open5");
+
+		
+		fileMenu.add(openRecent);
+		
 		fileMenu.add(createMenuItem("Save", 'S'));
 		fileMenu.add(createMenuItem("Save As"));
 		fileMenu.add(createMenuItem("Quit", 'Q'));
@@ -283,6 +320,11 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		// Standard file commands
 		if (command.equals("New")) newFile();
 		else if (command.equals("Open")) openFile();
+		else if (command.equals("open1")){ openRecentFile1(); System.out.println("open1");}
+		else if (command.equals("open2")){ openRecentFile2(); System.out.println("open2");}
+		else if (command.equals("open3")) openRecentFile3();
+		else if (command.equals("open4")) openRecentFile4();
+		else if (command.equals("open5")) openRecentFile5();
 		else if (command.equals("Save")) saveFile();
 		else if (command.equals("Save As")) saveFileAs();
 		else if (command.equals("Quit")) quit();
@@ -358,16 +400,111 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			currentFile = chooser.getSelectedFile();
 
 			filePath=chooser.getSelectedFile().getAbsolutePath();
-
+			
+		
+			
 			// Check if this is a valid file, and if it is, update the pseudocode editor
 			// with the String contents of the file.
 			if (currentFile.exists()) {
 				pseudocode.updateText(readFile(currentFile));
+				
+				
+				if(openCounter==0){
+					
+					//Adds the opened file's path to the recently opened files list
+					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+					
+					open1.setText(chooser.getName(currentFile).toString());
+					openRecent.add(open1);
+					openCounter++;
+				}
+				else if(openCounter==1){
+					//Adds the opened file's path to the recently opened files list
+					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+					
+					open2.setText(open1.getText());
+					open1.setText(chooser.getName(currentFile).toString());
+					openRecent.add(open2);
+					
+					openCounter++;
+				}
+				else if(openCounter==2){
+					//Adds the opened file's path to the recently opened files list
+					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());	
+					
+					open3.setText(open2.getText());
+					open2.setText(open1.getText());
+					open1.setText(chooser.getName(currentFile).toString());
+					
+					openRecent.add(open3);
+					openCounter++;
+				}
+				else if(openCounter==3){
+					//Adds the opened file's path to the recently opened files list
+					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+					
+					open4.setText(open3.getText());
+					open3.setText(open2.getText());
+					open2.setText(open1.getText());
+					open1.setText(chooser.getName(currentFile).toString());
+					
+					openRecent.add(open4);
+					openCounter++;
+				}
+				else if(openCounter==4){
+					//Adds the opened file's path to the recently opened files list
+					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+					
+					//If there are only 4 recent files before, there will be an error
+					try{
+						openedFilePaths.remove(5);
+					}
+					catch(Exception e){}
+					
+					open5.setText(open4.getText());
+					open4.setText(open3.getText());
+					open3.setText(open2.getText());
+					open2.setText(open1.getText());
+					open1.setText(chooser.getName(currentFile).toString());
+					
+					System.out.println(chooser.getName(currentFile));
+					openRecent.add(open5);
+				}
+				
 			}
 		}
 		//Clears oldExampleName as an example is no longer open
 		oldExampleName="";
 
+	}
+	
+	/*
+	 * Opens the recently opened files (each function opens the xth most recent file)
+	 */
+	
+	private void openRecentFile1(){
+		File file = new File(openedFilePaths.get(0));
+		pseudocode.updateText(readFile(file));
+	}
+	
+	private void openRecentFile2(){
+		File file = new File(openedFilePaths.get(1));
+		pseudocode.updateText(readFile(file));
+	}
+	
+	private void openRecentFile3(){
+		File file = new File(openedFilePaths.get(2));
+		pseudocode.updateText(readFile(file));
+	}
+	
+	private void openRecentFile4(){
+		File file = new File(openedFilePaths.get(3));
+		pseudocode.updateText(readFile(file));
+	}
+	
+	private void openRecentFile5(){
+		File file = new File(openedFilePaths.get(4));
+		pseudocode.updateText(readFile(file));
 	}
 
 	/**
