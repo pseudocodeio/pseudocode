@@ -88,29 +88,49 @@ public class Pseudocode extends JFrame {
 
 	/**
 	 * Called whenever the text in the editor is updated.
+	 * @param text  the text to update the editor with
 	 */
 	public void update(String text) {
 		parsed = parser.parse(text);
 		interpreter.interpret(parsed);
 	}
 	
+	/**
+	 * Called whenever the text in the editor needs to be updated
+	 * @param text the text to update the editor with
+	 */
 	public void updateText(String text) {
 		editor.updateText(text);
 		update(text);
 	}
 	
+	/**
+	 * Called whenever the text in the editor needs to be accessed
+	 */
 	public String getText() {
 		return editor.getText();
 	}	
 	
+	/**
+	 * Called whenever the array of undoable edits needs to be accessed
+	 * @return the array of undoable edits
+	 */
 	public ArrayList<String> returnUndoText(){
 		return editor.returnUndoText();
 	}
 	
+	/**
+	 * Used to set the array of undoable edits to a new array
+	 * @param input the new array of undoable edits
+	 */
 	public void setUndoText(ArrayList<String> input){
 		editor.setUndoText(input);
 	}
 	
+	/**
+	 * Used to add a single instance to the array of undoable edits
+	 * @param input the string which is added to the array of undoable edits
+	 */
 	public void addUndoText(String input){
 		editor.addUndoText(input);
 	}

@@ -260,13 +260,26 @@ public class Editor extends JPanel implements KeyListener {
 	public void keyTyped(KeyEvent e) {}
 	public void keyPressed(KeyEvent e) {}
 	
+	/**
+	 * Used to retrieve the array of undoable edits
+	 * @return the array of undoable edits, undoText
+	 */
 	public ArrayList<String> returnUndoText(){
 		return undoText;
 	}
+	
+	/**
+	 * Used to set the array of undoable edits to a new array
+	 * @param input the new array of undoable edits
+	 */
 	public void setUndoText(ArrayList<String> input){
 		undoText=input;	
 	}
 	
+	/**
+	 * Used to add a single instance to the array of undoable edits, undoText
+	 * @param input the String which is to be added to the array of undoable edits, undoText
+	 */
 	public void addUndoText(String input){
 		undoText.add(input);
 	}

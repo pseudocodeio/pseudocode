@@ -430,13 +430,19 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			
 			filePath=chooser.getSelectedFile().getAbsolutePath();
 			
-			if (currentFile.exists()) 
-				pseudocode.updateText(readFile(currentFile));		
 			
 			// Check if this is a valid file, and if it is, update the pseudocode editor
 			// with the String contents of the file.
-				
-				
+			if (currentFile.exists()) 
+				pseudocode.updateText(readFile(currentFile));		
+			
+				/*
+				 * Each time a file is opened, it is added to the open recent menu and openCounter is added to
+				 * until it reaches 5
+				 * 
+				 * The newest opened file occupies the first place with each succeeding file occupying the
+				 * following five spaces
+				 */
 				if(openCounter==0){
 					
 					//Adds the opened file's path to the recently opened files list
@@ -509,7 +515,6 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	/*
 	 * Opens the recently opened files (each function opens the xth most recent file)
 	 */
-	
 	private void openRecentFile1(){
 		File file = new File(openedFilePaths.get(0));
 		pseudocode.updateText(readFile(file));
@@ -642,6 +647,14 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 	}
 
+	/*
+	 * This function undoes text typed by the user
+	 * It takes an array of all the words typed by the user with each instance being the text in the text
+	 * pane after the space or enter keys are pressed or after a redo action
+	 * 
+	 * The function takes the instance in the array preceding the text in the text pane and updates the
+	 * text in the text pane with the new text
+	 */
 	private void undo(){
 		ArrayList<String> undoText = new ArrayList<String>();
 		undoText=pseudocode.returnUndoText();
@@ -674,6 +687,10 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		pseudocode.setUndoText(undoText);
 }
 
+	/*
+	 * This function redoes code which has been undone by the user by using an array of the text in the text
+	 * pane after and before an undo
+	 */
 	private void redo(){
 		
 		pseudocode.addUndoText(pseudocode.getText());
