@@ -132,6 +132,26 @@ set x to 1
 set y to x
 ```
 
+### Lists
+
+You can create lists
+
+```
+set x to 1, 2, 3
+```
+
+You can access a value in a list
+
+```
+print x of 1
+```
+
+You can change a value in a list
+
+```
+set x of 1 to 5
+```
+
 
 ### Random Numbers
 
@@ -299,12 +319,26 @@ You can print variables within text
 
 ```
 set x to 5
-
 print "The dog jumped over the quick brown fox by #x meters"
 ```
 
+You can print a whole list
+
+```
+set x to 1, 5, 9
+print "#x"
+```
+
+You can print an item in a list
+
+```
+set x to 1, 5, 7
+print x of 1
+print "The dog jumped over the quick brown fox by #x:1 meters"
+```
 
 ### Waiting **Not Currently Working**
+
 You can pause your program for a certain amount of time
 
 ```
@@ -314,9 +348,10 @@ delay 100
 pause 100
 ```
 
-### Functions **Check for correct syntax**
+### Functions **Not Currently Working**
+
 You can create functions with "to" and set parameters with "with"
-**Not sure about the exact syntax**
+
 ```
 to functionName with x
 	print x
