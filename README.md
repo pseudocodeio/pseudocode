@@ -369,7 +369,7 @@ do functionName with 3, 4
 
 ## Future todo list
 
-- [ ] Lists
+- [√] Lists
 - [ ] Functions
 
 ```

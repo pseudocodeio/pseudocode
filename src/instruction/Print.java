@@ -46,10 +46,18 @@ public class Print extends Instruction {
 		String words[] = text.split(" ");
 		String print = "";
 		for(String i: words){
-			//TODO: print list
 			if(i.startsWith("#")){
+				int index = 0;
 				i = i.substring(1);
-				i = Double.toString(algorithm.get(i,0));
+				if(i.contains(":")){
+					String[] split = i.split(":");
+					if(split.length == 2){
+						i = split[0];
+						index = Integer.parseInt(split[1]);
+					}
+					
+				}
+				i = Double.toString(algorithm.get(i, index));
 			}
 			print += i + " ";
 		}

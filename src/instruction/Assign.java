@@ -45,9 +45,9 @@ public class Assign extends Instruction {
 	 * Calls the Block object's assign method with the given symbol and expression object.
 	 */
 	public void execute(Graphics graphics, Block block) {
-//		if(index !=null)
-//			block.assign(symbol, value, index);
-		//else
+		if(index !=null)
+			block.assign(symbol, value, index);
+		else
 			block.assign(symbol, expression);
 	}
 	
