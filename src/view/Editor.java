@@ -284,4 +284,8 @@ public class Editor extends JPanel implements KeyListener {
 		undoText.add(input);
 	}
 	
+	public String getSelectedText(){
+		return area.getSelectedText();
+	}
+	
 }

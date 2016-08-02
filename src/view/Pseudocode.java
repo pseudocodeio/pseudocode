@@ -135,4 +135,8 @@ public class Pseudocode extends JFrame {
 		editor.addUndoText(input);
 	}
 	
+	public String getSelectedText(){
+		return editor.getSelectedText();
+	}
+	
 }

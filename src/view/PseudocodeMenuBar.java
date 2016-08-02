@@ -3,6 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,8 +27,12 @@ import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+
+import expression.RGB;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -44,7 +50,7 @@ import javax.swing.KeyStroke;
  */
 @SuppressWarnings("serial")
 public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
-
+	
 	// Refers to the pseudocode frame that is containing this menu bar.
 	private Pseudocode pseudocode;
 
@@ -80,7 +86,10 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	JMenuItem open3 = new JMenuItem();
 	JMenuItem open4 = new JMenuItem();
 	JMenuItem open5 = new JMenuItem();
+	
+	String findText;
 
+	
 	// The FileFilter object that is used to filter non-pseudocode files from being opened.
 	private FileFilter pseudocodeFilter = new FileFilter() {
 
@@ -146,7 +155,6 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		fileMenu.add(createMenuItem("Save As"));
 		fileMenu.add(createMenuItem("Quit", 'Q'));
 		add(fileMenu);
-
 		JMenu editMenu = createMenu("Edit");
 		editMenu.add(createMenuItem("Undo", 'Z'));
 		editMenu.add(createMenuItem("Redo", 'Y'));
@@ -334,7 +342,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		// Edit commands
 		else if (command.equals("Undo")) undo();
 		else if (command.equals("Redo")) redo();
-		else if (command.equals("Find")) find();
+		else if (command.equals("Find")) findMenu();
 
 		// Mesh commands
 		else if (command.equals("Start Mesh")) {
@@ -705,9 +713,35 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		pseudocode.addUndoText(pseudocode.getText());
 	}
 	
-	private void find(){
+	private void findMenu(){
+		
+		
+		final Find find = new Find();
+		
+		JButton findButton = new JButton();
+		findButton.setFont(new Font("Menlo", 0, 20));
+		findButton.setBackground(RGB.fromHex("#ECEFF1"));
+		findButton.setText("Find");
+		findButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				findText = pseudocode.getSelectedText();
+				if(find.replaceArea.getText().equals("")){
+					
+				}
+			}
+		});
+		
+		//Set the location of the find button
+		find.c.fill=GridBagConstraints.HORIZONTAL;
+		find.c.gridy=4;
+		find.c.gridx=0;
+		find.c.gridwidth=4;
+		find.c.ipady=10;
+		find.c.weightx=1;
+		find.container.add(findButton, find.c);
 		
 	}
+	
 
 
 
