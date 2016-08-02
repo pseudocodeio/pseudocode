@@ -273,29 +273,24 @@ public class Block extends Instruction {
 		int index = 0;
 		if(exp != null)
 			 index = (int) exp.evaluate(this);
-		if (local.containsKey(symbol.toString()))
-			return get(symbol.toString(), index, local);
-		else if (hasSymbol(symbol)){
-			return get(symbol.toString(), index, this.symbol);
-		}
-			
-		else return 0;
+		return get(symbol.toString(), index, getScope(symbol.toString()));
 	}
+
+	public double get(String symbol, int index) { return get(symbol, index, getScope(symbol)); }
+	
+	public double get(String symbol){ return get(symbol, 0, getScope(symbol)); }
 	
 	/**
-	 * Returns the value assigned to the given symbol name.
-	 * @param symbol - the name of the symbol
-	 * @return the value assigned to the symbol, or 0 if no value was assigned
+	 * Returns an array of the entire list
 	 */
-	public double get(String symbol, int index) {
-		System.out.println(local);
-		if (local.containsKey(symbol.toString()))
-			return get(symbol, index, local);
-		else if (hasSymbol(symbol)){
-			return get(symbol, index, this.symbol);
+	public ArrayList<Double> getList(String symbol){
+		ArrayList<Double> values = new ArrayList<Double>();
+		if(hasSymbol(symbol)){
+			for(int i=0; i < getScope(symbol).get(symbol).get("length");i++){
+				values.add(get(symbol, i , getScope(symbol)));
+			}
 		}
-			
-		return 0;
+		return values;
 	}
 	
 	/**
@@ -306,18 +301,15 @@ public class Block extends Instruction {
 	 * @return
 	 */
 	public double get(String symbol, int index, HashMap <String, HashMap <String, Double>> values){
-		System.out.println(local);
+		if(values == null)
+			return 0;
 		String getName = "value";
-		if(this.symbol.get(symbol.toString()).get("type") == LIST){
-			if(index >= this.symbol.get(symbol.toString()).get("length"))
+		if(getScope(symbol).get(symbol.toString()).get("type") == LIST){
+			if(index >= getScope(symbol).get(symbol.toString()).get("length") || index < 0)
 				index = 0;
 			getName = "" + index;
 		}
 		return values.get(symbol).get(getName);
-	}
-	
-	public String get(String symbol){
-		return "Todo";
 	}
 	
 	/**
@@ -339,7 +331,7 @@ public class Block extends Instruction {
 		int index = -1;
 		if(i != null)
 			index = (int) i.evaluate(this);
-		if(IsType(scope, symbol, LIST) && index > -1){
+		if(isType(scope, symbol, LIST) && index > -1){
 			if(index > scope.get(symbol).get("length")){
 				index = 0;
 			}
@@ -404,12 +396,49 @@ public class Block extends Instruction {
 	public void error(String message) {
 		console.error(message);
 	}
+	
+	/**
+	 * Returns the scope of the given variable
+	 **/
+	private HashMap<String, HashMap<String, Double>> getScope(String symbol){
+		if (local.containsKey(symbol))
+			return local;
+		else if (hasSymbol(symbol)){
+			return this.symbol;
+		}
+		return null;
+	}
+	
 	/**
 	 * Returns true if the given variable is of the given type
 	 */
-	private boolean IsType(HashMap< String, HashMap<String, Double>> map, String variable, double type) {
-		if(map.containsKey(variable))
-			return map.get(variable).get("type") == type;
+	private boolean isType(HashMap< String, HashMap<String, Double>> map, String variable, double type) {
+		if(map != null){
+			if(map.containsKey(variable))
+				return map.get(variable).get("type") == type;
+		}
 		return false;
+	}
+	/**
+	 * Returns the value that needs to be printed
+	 */
+	public String printVal(String symbol, int index){
+		if(isType(getScope(symbol), symbol, NUMBER))
+			return "" + get(symbol);
+		else if(isType(getScope(symbol), symbol, LIST)){
+			String print = "";
+			if(index > 0){
+				print = "" + get(symbol,index);
+			}
+			else{
+				for(Double i : getList(symbol)){
+					print += i + ", ";
+				}
+				print = print.substring(0, print.lastIndexOf(","));
+			}
+			
+			return print;
+		}
+		return "";
 	}
 }

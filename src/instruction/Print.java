@@ -36,7 +36,7 @@ public class Print extends Instruction {
 		
 		// Otherwise print the evaluated value of the expression.
 		else 
-			algorithm.print("" + expression.evaluate(algorithm));
+			algorithm.print(evaluateString("" + expression.evaluate(algorithm), algorithm));
 	}
 	
 	/**
@@ -46,21 +46,29 @@ public class Print extends Instruction {
 		String words[] = text.split(" ");
 		String print = "";
 		for(String i: words){
+			int index = -1;
 			if(i.startsWith("#")){
-				int index = 0;
 				i = i.substring(1);
 				if(i.contains(":")){
 					String[] split = i.split(":");
 					if(split.length == 2){
 						i = split[0];
-						index = Integer.parseInt(split[1]);
+						try{
+							index = Integer.parseInt(split[1]);
+						}
+						catch (NumberFormatException e){
+							index = 0;
+						}
+						
 					}
 					
 				}
-				i = Double.toString(algorithm.get(i, index));
+				print += algorithm.printVal(i, index) + " ";
 			}
-			print += i + " ";
+			else
+				print += i;
 		}
+
 		return print;
 		
 	}
