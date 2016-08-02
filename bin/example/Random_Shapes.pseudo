@@ -1,0 +1,10 @@
+forever
+	set x1 to random number
+	set y1 to random number
+	set x2 to random number
+	set y2 to random number	
+	set x3 to random number
+	set y3 to random number
+	
+	set background white
+	draw filled random color polygon from x1, y1 to x2, y2 to x3, y3

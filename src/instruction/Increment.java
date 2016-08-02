@@ -52,7 +52,7 @@ public class Increment extends Instruction {
 	 * Executes this increment instruction.
 	 */
 	public void execute(Graphics graphics, Block block) {
-		block.assign(symbol, new Expression(symbol, Operator.Add, change));
+		block.assign(symbol.toString(), new Expression(symbol, Operator.Add, change));
 	}
 	
 	/**

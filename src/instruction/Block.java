@@ -3,9 +3,11 @@ package instruction;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import expression.Expression;
 import expression.SymbolTerminal;
+import expression.Terminal;
 import view.Console;
 
 /**
@@ -20,10 +22,14 @@ public class Block extends Instruction {
 	
 	// Reference to the symbol table. If this block is created by a parent block, this
 	// will reference the symbol table of the parent block.
-	private HashMap <String, Double> symbol;
-	private HashMap <String, Double> local;
+	private HashMap <String, HashMap <String, Double>> symbol;
+	private HashMap <String, HashMap <String, Double>> local;
 	private HashMap <String, Block> function;
 	private Block parent;
+	
+	//Constants for the types in the symbol tables
+	private final static double NUMBER = 0;
+	private final static double LIST = 1;
 	
 	// The console output view.
 	private Console console;
@@ -51,11 +57,11 @@ public class Block extends Instruction {
 	 */
 	public Block(Block parent) {
 		instructions = new ArrayList <Instruction> ();
-		local = new HashMap <String, Double> ();
+		local = new HashMap <String, HashMap<String, Double>> ();
 		
 		// If this is the root block
 		if (parent == null) {
-			symbol = new HashMap <String, Double> ();
+			symbol = new HashMap <String, HashMap<String, Double>> ();
 			function = new HashMap <String, Block> ();
 		}
 		
@@ -180,10 +186,9 @@ public class Block extends Instruction {
 		return instructions.size();
 	}
 	
-	public HashMap <String, Double> getSymbolTable() {
+	public HashMap<String, HashMap<String, Double>> getSymbolTable() {
 		return symbol;
 	}
-	
 
 	/**
 	 * Returns the String representation of this block by concatenating the String
@@ -257,16 +262,29 @@ public class Block extends Instruction {
 		return this.local.containsKey(symbol) || this.symbol.containsKey(symbol);
 	}
 	
+	
 	/**
 	 * Returns the value assigned to the given symbol name.
 	 * @param symbol - the name of the symbol
 	 * @return the value assigned to the symbol, or 0 if no value was assigned
 	 */
-	public double get(SymbolTerminal symbol) {
+	public double get(SymbolTerminal symbol, Expression exp) {
+		int index = 0;
+		String getName = "value";
+		if(exp != null)
+			 index = (int) exp.evaluate(this);
+		if(this.symbol.get(symbol.toString()).get("type") == LIST){
+			if(index >= this.symbol.get(symbol.toString()).get("length"))
+				index = 0;
+			getName = "" + index;
+		}
+			index = 0;
 		if (local.containsKey(symbol.toString()))
-			return local.get(symbol.toString());
-		else if (hasSymbol(symbol))
-			return this.symbol.get(symbol.toString());
+			return local.get(symbol.toString()).get(getName);
+		else if (hasSymbol(symbol)){
+			return this.symbol.get(symbol.toString()).get(getName);
+		}
+			
 		else return 0;
 	}
 	
@@ -275,46 +293,66 @@ public class Block extends Instruction {
 	 * @param symbol - the name of the symbol
 	 * @return the value assigned to the symbol, or 0 if no value was assigned
 	 */
-	public double get(String symbol) {
-		if (local.containsKey(symbol))
-			return local.get(symbol);
-		else if (hasSymbol(symbol))
-			return this.symbol.get(symbol);
+	public double get(String symbol, int index) {
+		String getName = "value";
+		if(this.symbol.get(symbol.toString()).get("type") == LIST){
+			if(index >= this.symbol.get(symbol.toString()).get("length"))
+				index = 0;
+			getName = "" + index;
+		}
+			index = 0;
+		if (local.containsKey(symbol.toString()))
+			return local.get(symbol.toString()).get(getName);
+		else if (hasSymbol(symbol)){
+			return this.symbol.get(symbol.toString()).get(getName);
+		}
+			
 		else return 0;
 	}
 	
-	/**
-	 * Assigns the given symbol name to the value of the given expression.
-	 * @param symbol - the symbol name
-	 * @param expression - the Expression object representing the assigned value
-	 */
-	public void assign(SymbolTerminal symbol, Expression expression) {
-		this.symbol.put(symbol.toString(), expression.evaluate(this));
+	public String get(String symbol){
+		return "Todo";
 	}
 	
-	/**
-	 * Assigns the given symbol name to the value of the given expression.
-	 * @param symbol - the symbol name
-	 * @param expression - the Expression object representing the assigned value
-	 */
-	public void assign(String symbol, Expression expression) {
-		this.symbol.put(symbol, expression.evaluate(this));
+	public void assign(String symbol, Expression value){
+		HashMap <String, Double> valueMap = new HashMap <String, Double>();
+		valueMap.put("type", NUMBER);
+		valueMap.put("value", value.evaluate(this));
+		this.symbol.put(symbol, valueMap);
 	}
 	
-	/**
-	 * Assigns the given symbol name to the given numeric value.
-	 * @param symbol - the symbol name
-	 * @param value - value to assign to the symbol
-	 */
-	public void assign(String symbol, double value) {
-		this.symbol.put(symbol, value);
+	public void assign(String symbol, int value){
+		HashMap <String, Double> valueMap = new HashMap <String, Double>();
+		valueMap.put("type", NUMBER);
+		valueMap.put("value", (double)value);
+		this.symbol.put(symbol, valueMap);
 	}
 	
-	/**
-	 * Assigns a local value of the given string to value.
-	 */
-	public void assignLocal(String symbol, double value) {
-		this.local.put(symbol, value);
+	public void assign(SymbolTerminal symbol, ArrayList<Expression> value){
+		HashMap <String, Double> valueMap = new HashMap <String, Double>();
+		if(value.size() == 1){
+			valueMap.put("type", NUMBER);
+			valueMap.put("value", value.get(0).evaluate(this));
+			this.symbol.put(symbol.toString(), valueMap);
+		}
+		else{
+			valueMap.put("type", LIST);
+			valueMap.put("length", (double) value.size());
+			for(int i = 0; i < value.size(); i++){
+				valueMap.put("" + i, value.get(i).evaluate(this));
+			}
+			this.symbol.put(symbol.toString(), valueMap);
+		}
+	}
+	
+	public void assignLocal(String symbol, double value){
+		if(local.containsKey(symbol)){
+			local.get(symbol).put("value", value);	
+		}
+		HashMap <String, Double> valueMap = new HashMap <String, Double>();
+		valueMap.put("type", NUMBER);
+		valueMap.put("value", value);
+		local.put(symbol, valueMap);
 	}
 	
 	/**

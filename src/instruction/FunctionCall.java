@@ -15,9 +15,10 @@ public class FunctionCall extends Instruction {
 	}
 	
 	public void addArgument(String parameter, Expression argument) {
-		if (arguments != null)
+		if (arguments == null)
 			arguments = new HashMap <String, Expression> ();
-		arguments.put(parameter, argument);
+		if(argument != null && parameter != null)
+			arguments.put(parameter, argument);
 	}
 	
 	@Override

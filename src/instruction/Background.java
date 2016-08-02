@@ -28,7 +28,7 @@ public class Background extends Instruction {
 	@Override
 	public void execute(Graphics graphics, Block block) {
 		graphics.setColor(color);
-		graphics.fillRect(0, 0, (int) block.get("width"), (int) block.get("height"));
+		graphics.fillRect(0, 0, (int) block.get("width",0), (int) block.get("height",0));
 	}
 	
 	/**

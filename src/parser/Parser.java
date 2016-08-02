@@ -351,8 +351,21 @@ public class Parser {
 	public Instruction parseAssign() {
 		if (peekSymbolTerminal()) {
 			SymbolTerminal symbol = parseSymbolTerminal();
-			if (getNext("to", "as") && peekExpression()) {
-				return new Assign(symbol, parseExpression());
+			if(getNext("of") && peekExpression()){
+				Expression index = parseExpression();
+				if(getNext("to", "as") &&  peekExpression())
+					return new Assign(symbol, parseExpression(), index);
+			}
+			else if (getNext("to", "as") && peekExpression()) {
+				ArrayList<Expression> values = new ArrayList<Expression>();
+				if(peekExpression())
+					values.add(parseExpression());
+				while(!atDelimiter()){
+					if(getNext(",") && peekExpression())
+						values.add(parseExpression());
+				}
+					
+					return new Assign(symbol, values);
 			}
 		}
 		return null;
@@ -509,7 +522,10 @@ public class Parser {
 					}
 					else {
 						// Try to parse one number
-						if (peekExpression()) draw.setX(parseExpression());
+						if (peekExpression()){
+							Expression x = parseExpression();
+							draw.setX(x);
+						}
 						skipNext(",");
 						// If another number can be parsed
 						if (peekExpression()) draw.setY(parseExpression());
@@ -869,6 +885,8 @@ public class Parser {
 	public SymbolTerminal parseSymbolTerminal() {
 		String symbolName = getNext();
 		rootBlock.assign(symbolName, new Terminal(0));
+		if(getNext("of") && peekExpression())
+			return new SymbolTerminal(symbolName, parseExpression());
 		return new SymbolTerminal(symbolName);
 	}
 
