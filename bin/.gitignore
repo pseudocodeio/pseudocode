@@ -1,5 +1,8 @@
-/view/
-/instruction/
-/parser/
+/.DS_Store
+/example/
 /expression/
-/util/
+/instruction/
+/mesh/
+/parser/
+/test/
+/view/

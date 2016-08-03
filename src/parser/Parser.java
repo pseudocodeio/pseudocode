@@ -190,6 +190,11 @@ public class Parser {
 			else return new Forever(parseBlock(block));
 		}
 
+		// Repeat instructions number of times
+		else if (getNext("repeat") && peekExpression()) {
+			return parseRepeat(block);
+		}
+
 		// Parse an if statement
 		else if (getNext("if") && peekExpression()) {
 			return parseIf(block);
@@ -254,6 +259,15 @@ public class Parser {
 	private Instruction parseWait(){
 		if(peekExpression()){
 			return new Wait(parseExpression());
+		}
+		return null;
+	}
+	
+	private Instruction parseRepeat(Block parentBlock) {
+		Expression condition = parseExpression();
+		if (condition != null) {
+			Block repeatBlock = parseBlock(parentBlock);
+			return new RepeatBlock(condition, repeatBlock);
 		}
 		return null;
 	}
