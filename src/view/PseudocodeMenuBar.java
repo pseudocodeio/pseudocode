@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -729,12 +730,41 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			}
 		});
 
+		find.backButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				backLogic(find.findArea.getText());
+			}
+		});
+		
+		find.replaceAll.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				pseudocode.updateText(pseudocode.getText().replaceAll(find.findArea.getText()
+						,find.replaceArea.getText()));
+			}
+		});
+		
+
+		find.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				Highlighter highlighter = pseudocode.getHighlighter();
+				HighlightPainter painter = 
+						new DefaultHighlighter.DefaultHighlightPainter(Color.yellow);
+				highlighter.removeAllHighlights();
+				find.dispose();
+			}
+		});
+
 
 	}
 
-	public void findLogic(String findWord){
+	private void findLogic(String findWord){
+
+		if(pseudocode.getText().length()-lastFind<findWord.length()){lastFind=0;}
+
 		if(find.replaceArea.getText().equals("")){
 			for(int i=lastFind;i<pseudocode.getText().length()-(findWord.length()-2); i++){
+
+
 				if(pseudocode.getText().substring(i,i+findWord.length()).equals(findWord)){
 					Highlighter highlighter = pseudocode.getHighlighter();
 					HighlightPainter painter = 
@@ -745,24 +775,42 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 					} catch (BadLocationException e) { }
 
 
-					if(pseudocode.getText().length()-i>findWord.length()){
+					if(i-pseudocode.getText().length()<findWord.length()){
 						lastFind=i+1;
-					}
-					else{
-						lastFind=0;
 					}
 
 					break;
 				}
+
 			}
-			
+
 		}
 		else if(find.replaceArea.getText().length()>0){
 			pseudocode.updateText(pseudocode.getText().replaceFirst(findWord, find.replaceArea.getText()));
 		}
 	}
 
+	private void backLogic(String findWord){
+		for(int i=lastFind; i>findWord.length()-1;i--){
+			if(pseudocode.getText().substring(i-findWord.length(),i).equals(findWord)){
+				Highlighter highlighter = pseudocode.getHighlighter();
+				HighlightPainter painter = 
+						new DefaultHighlighter.DefaultHighlightPainter(Color.yellow);
+				try {
+					highlighter.removeAllHighlights();
+					highlighter.addHighlight(i-findWord.length(), i, painter);
+				} catch (BadLocationException E) { }
 
 
+				if(i>findWord.length()){
+					lastFind=i-findWord.length();
+				}
+				else{
+					lastFind=pseudocode.getText().length();
+				}
 
+				break;
+			}
+		}
+	}
 }

@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -46,6 +48,8 @@ public class Find extends JFrame{
 	
 	//Create the buttons and text panes
 	JButton findButton = new JButton();
+	JButton replaceAll = new JButton();
+	JButton backButton = new JButton();
 	JTextPane findArea = new JTextPane();
 	JTextPane replaceArea = new JTextPane();
 
@@ -58,6 +62,7 @@ public class Find extends JFrame{
         setLocation(x + width, y);
 
 		setVisible(true);
+		
 	}
 
 	public void initialize(){
@@ -87,11 +92,22 @@ public class Find extends JFrame{
 		replaceLabel.setBackground(BACKGROUND);
 		
 		//Create the find button
-		findButton.setFont(new Font("Menlo", 0, 20));
+		findButton.setFont(new Font("Menlo", 0, BUTTON_FONT_SIZE));
 		findButton.setBackground(RGB.fromHex("#ECEFF1"));
-		findButton.setText("Find");
+		findButton.setText("Next");
 		
-
+		//Create the replace all button
+		replaceAll.setFont(new Font("Menlo", 0, FONT_SIZE));
+		replaceAll.setBackground(RGB.fromHex("#ECEFF1"));
+		replaceAll.setText("Replace All");
+		
+		//Create the back button
+		backButton.setFont(new Font("Menlo", 0, BUTTON_FONT_SIZE));
+		backButton.setBackground(RGB.fromHex("#ECEFF1"));
+		backButton.setText("Previous");
+		
+		
+		
 		JPanel filler1 = new JPanel();
 		JPanel filler2 = new JPanel();
 
@@ -137,17 +153,35 @@ public class Find extends JFrame{
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridx=0;
 		c.gridy=3;
-		c.ipady=50;
+		c.ipady=30;
 		container.add(filler2, c);
 		
 		//Set the location of the find button
 		c.fill=GridBagConstraints.HORIZONTAL;
 		c.gridy=4;
 		c.gridx=0;
-		c.gridwidth=4;
+		c.gridwidth=2;
 		c.ipady=10;
 		c.weightx=1;
 		container.add(findButton, c);
+		
+		//Set the location of the back button
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridy=4;
+		c.gridx=2;
+		c.gridwidth=2;
+		c.ipady=10;
+		c.weightx=1;
+		container.add(backButton, c);
+		
+		//Set the location of the replace all button
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridy=5;
+		c.gridx=0;
+		c.gridwidth=4;
+		c.ipady=3;
+		c.weightx=1;
+		container.add(replaceAll, c);
 
 		
 		
