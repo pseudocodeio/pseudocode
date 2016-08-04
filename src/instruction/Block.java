@@ -27,10 +27,14 @@ public class Block extends Instruction {
 	private HashMap <String, Block> function;
 	private Block parent;
 	
-	//Constants for the types in the symbol tables
-	private final static double NUMBER = 0;
-	private final static double LIST = 1;
-	private final static double STRING = 2;
+	enum Variable {
+		Number, List, String, Image
+	};
+	
+	private static final double NUMBER = 0;
+	private static final double LIST = 1;
+	private static final double STRING = 2;
+	private static final double IMAGE = 3;
 	
 	// The console output view.
 	private Console console;
@@ -106,8 +110,8 @@ public class Block extends Instruction {
 	public void setParameters(Block block, HashMap <String, Expression> arguments) {
 		if (parameters != null) {
 			for (String parameter : parameters) {
-				if (arguments.containsKey(parameter))
-					assignLocal(parameter, arguments.get(parameter).evaluate(block));
+				//if (arguments.containsKey(parameter))
+					//assignLocal(parameter, arguments.get(parameter).evaluate(block));
 			}
 		}
 	}
@@ -304,8 +308,8 @@ public class Block extends Instruction {
 		if(values == null)
 			return 0;
 		String getName = "value";
-		if(getScope(symbol).get(symbol.toString()).get("type") == LIST){
-			if(index >= getScope(symbol).get(symbol.toString()).get("length") || index < 0)
+		if(values.get(symbol.toString()).get("type") == LIST){
+			if(index >= values.get(symbol.toString()).get("length") || index < 0)
 				index = 0;
 			getName = "" + index;
 		}
@@ -315,10 +319,26 @@ public class Block extends Instruction {
 	/**
 	 * Various methods that call the assign method below
 	 */
-	public void assign(String symbol, Expression value){ assign(symbol, value.evaluate(this), null, this.symbol); }
-	public void assign(String symbol, double value){ assign(symbol, value, null, this.symbol); }
-	public void assign(SymbolTerminal symbol, Expression value, Expression index){ assign(symbol.toString(), value.evaluate(this), index, this.symbol); }
-	public void assignLocal(String symbol, double value){ assign(symbol, value, null, local); }
+	public void assign(String symbol, int value){
+		assign(symbol, value, 0, null, currentScope(), Variable.Number);
+	}
+	public void assign(String symbol, Terminal value){
+		assign(symbol, value.evaluate(this), 0, null, currentScope(), Variable.Number);
+	}
+	public void assign(String symbol, Expression value){
+		assign(symbol, value.evaluate(this), 0, null, currentScope(), Variable.Number);
+	}
+	public void assign(SymbolTerminal symbol, Expression value, Expression index, Variable type){
+		int i = -1;
+		if(index != null){
+			type = Variable.List;
+			i = (int) index.evaluate(this);
+		}
+		assign(symbol.toString(), value.evaluate(this), i, null, currentScope(), type);
+	}
+	public void assign(SymbolTerminal symbol, ArrayList<Expression> values, Variable type){
+		assign(symbol.toString(), 0, -1, values, currentScope(), type);
+	}
 	
 	/**
 	 * Assigns the given value to the given variable
@@ -327,41 +347,60 @@ public class Block extends Instruction {
 	 * @param i - index of what is being set if the variable is a list
 	 * @param scope - HashMap of local or global variable
 	 */
-	public void assign(String symbol, double value, Expression i, HashMap <String, HashMap <String, Double>> scope){
-		int index = -1;
-		if(i != null)
-			index = (int) i.evaluate(this);
-		if(isType(scope, symbol, LIST) && index > -1){
-			if(index > scope.get(symbol).get("length")){
-				index = 0;
-			}
-			scope.get(symbol).put("" + index, value);
-		}
-		else{
-			HashMap <String, Double> valueMap = new HashMap <String, Double>();
-			valueMap.put("type", NUMBER);
-			valueMap.put("value", (double)value);
-			scope.put(symbol, valueMap);
-		}
-	}
-
-	public void assign(SymbolTerminal symbol, ArrayList<Expression> value){
+	public void assign(String symbol, double value, int index, ArrayList<Expression> values, HashMap <String, HashMap <String, Double>> scope, Variable type ){
 		HashMap <String, Double> valueMap = new HashMap <String, Double>();
-		if(value.size() == 1){
-			valueMap.put("type", NUMBER);
-			valueMap.put("value", value.get(0).evaluate(this));
-			this.symbol.put(symbol.toString(), valueMap);
-		}
-		else{
-			valueMap.put("type", LIST);
-			valueMap.put("length", (double) value.size());
-			for(int i = 0; i < value.size(); i++){
-				valueMap.put("" + i, value.get(i).evaluate(this));
+		switch(type){
+		case Number:
+				valueMap.put("value", value);
+				valueMap.put("type", NUMBER);
+				scope.put(symbol, valueMap);	
+			break;
+		case List:
+			if(index < 0){
+				if(values.size() == 1){
+					valueMap.put("type", NUMBER);
+					valueMap.put("value", values.get(0).evaluate(this));
+					scope.put(symbol.toString(), valueMap);
+				}
+				else{
+					valueMap.put("type", LIST);
+					valueMap.put("length", (double) values.size());
+					for(int i = 0; i < values.size(); i++){
+						valueMap.put("" + i, values.get(i).evaluate(this));
+					}
+					scope.put(symbol.toString(), valueMap);
+				}
 			}
-			this.symbol.put(symbol.toString(), valueMap);
+			else {
+				if(isType(scope, symbol, LIST)){
+					if(scope.get(symbol).get("length") > (double)index)
+						scope.get(symbol).put("" + index, value);
+				}
+			}
+			break;
 		}
 	}
 	
+	/**
+	 * Assigns a image type variable
+	 * @param symbol - the name of the variable
+	 * @param path - the value being stored
+	 */
+	public void assignImg(SymbolTerminal symbol, String path){
+		HashMap <String, Double> valueMap = new HashMap <String, Double>();
+		valueMap.put("type", IMAGE);
+		ArrayList<Double> values = parseString(symbol.toString());
+		for(int i = 0; i < values.size(); i++){
+			valueMap.put(i+ "", values.get(i));
+		}
+		valueMap.put("length", (double) values.size());
+		this.symbol.put(symbol.toString(), valueMap);
+	}
+	
+	private ArrayList<Double> parseString(String string2) {
+		return null;
+	}
+
 	/**
 	 * Defines a function with the given name and block.
 	 */
@@ -400,13 +439,28 @@ public class Block extends Instruction {
 	/**
 	 * Returns the scope of the given variable
 	 **/
-	private HashMap<String, HashMap<String, Double>> getScope(String symbol){
+	public HashMap<String, HashMap<String, Double>> getScope(String symbol){
 		if (local.containsKey(symbol))
 			return local;
 		else if (hasSymbol(symbol)){
 			return this.symbol;
 		}
 		return null;
+	}
+	
+	public HashMap<String, HashMap<String, Double>> currentScope(){
+		return symbol;
+	}
+	
+	/**
+	 * Returns the double value of the given String
+	 */
+	private ArrayList<Double> castString(String word){
+		ArrayList<Double> characters = new ArrayList<Double>();
+		for(char c: word.toCharArray()){
+			characters.add((double)c);
+		}
+		return characters;
 	}
 	
 	/**

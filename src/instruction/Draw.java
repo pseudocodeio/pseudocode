@@ -33,7 +33,7 @@ public class Draw extends Instruction {
 	BufferedImage image = null;
 	boolean filled = false;
 	
-	//ArrayList for all the points in a arbitrary polygon
+	// ArrayList for all the points in a arbitrary polygon
 	ArrayList<Expression> polyx = new ArrayList<Expression>();
 	ArrayList<Expression> polyy = new ArrayList<Expression>();
 	

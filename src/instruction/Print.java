@@ -66,7 +66,7 @@ public class Print extends Instruction {
 				print += algorithm.printVal(i, index) + " ";
 			}
 			else
-				print += i;
+				print += i + " ";
 		}
 
 		return print;

@@ -2,6 +2,7 @@ package instruction;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import expression.Expression;
 import expression.SymbolTerminal;
@@ -20,6 +21,7 @@ public class Assign extends Instruction {
 	ArrayList<Expression> expression;
 	Expression value;
 	Expression index;
+	Block.Variable type;
 	
 	/**
 	 * An Assign object must have a symbol and expression object.
@@ -29,26 +31,42 @@ public class Assign extends Instruction {
 	public Assign(SymbolTerminal symbol, ArrayList<Expression> values) {
 		this.symbol = symbol;
 		this.expression = values;
+		type = Block.Variable.List;
 	}
 	
 	public Assign(SymbolTerminal symbol, Expression expression) {
+		this.symbol = symbol;
 		this.expression.add(expression);
+		type = Block.Variable.List;
 	}
 
 	public Assign(SymbolTerminal symbol, Expression expression, Expression index) {
 		this.symbol = symbol;
 		this.value = expression;
 		this.index = index;
+		type = Block.Variable.Number;
 	}
 
 	/**
 	 * Calls the Block object's assign method with the given symbol and expression object.
 	 */
 	public void execute(Graphics graphics, Block block) {
-		if(index !=null)
-			block.assign(symbol, value, index);
-		else
-			block.assign(symbol, expression);
+		HashMap<String, HashMap<String, Double>> scope = block.currentScope();
+		switch(type){
+		case List:
+				block.assign(symbol, expression, type);
+			break;
+		case Number:
+			int i = -1;
+			if(index != null){
+				i = (int) index.evaluate(block);
+				if(i > scope.get(symbol).get("length") || i < 0){
+					i = 0;
+				}
+			}
+			block.assign(symbol, value, index, type);
+			break;
+		}
 	}
 	
 	/**

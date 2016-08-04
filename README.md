@@ -406,6 +406,7 @@ do functionName with 3, 4
 
 - [√] Lists
 - [ ] Functions
+- [ ] Objects
 
 ```
 to draw a triangle at x, y,
