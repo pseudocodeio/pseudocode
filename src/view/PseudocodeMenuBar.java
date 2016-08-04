@@ -720,7 +720,11 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		}
 		pseudocode.addUndoText(pseudocode.getText());
 	}
-
+	
+	/**
+	 * This function creates the find window and calls the functions which have the
+	 * logic for find and replace
+	 */
 	private void findMenu(){
 		find=new Find(pseudocode.getFrameX(), pseudocode.getFrameY(), pseudocode.getFrameWidth());
 
@@ -757,6 +761,10 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 	}
 
+	/**
+	 * This function has the find functionality
+	 * @param findWord The word which needs to be found
+	 */
 	private void findLogic(String findWord){
 
 		if(pseudocode.getText().length()-lastFind<findWord.length()){lastFind=0;}
@@ -789,7 +797,11 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 			pseudocode.updateText(pseudocode.getText().replaceFirst(findWord, find.replaceArea.getText()));
 		}
 	}
-
+	
+	/**
+	 * This function contains the logic for the previous buton in the find window
+	 * @param findWord This is the word that needs to be found
+	 */
 	private void backLogic(String findWord){
 		for(int i=lastFind; i>findWord.length()-1;i--){
 			if(pseudocode.getText().substring(i-findWord.length(),i).equals(findWord)){
