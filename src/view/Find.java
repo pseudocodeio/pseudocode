@@ -41,15 +41,21 @@ public class Find extends JFrame{
 	
 	JPanel container = new JPanel(new GridBagLayout());
 	GridBagConstraints c = new GridBagConstraints();
-	
-	JTextPane replaceArea;
-	
+			
 	static JFrame frame;
+	
+	//Create the buttons and text panes
+	JButton findButton = new JButton();
+	JTextPane findArea = new JTextPane();
+	JTextPane replaceArea = new JTextPane();
 
-	public Find(){
+
+	public Find(int x, int y, int width){
 		super ("Find");
 		
 		initialize();
+		
+        setLocation(x + width, y);
 
 		setVisible(true);
 	}
@@ -57,7 +63,7 @@ public class Find extends JFrame{
 	public void initialize(){
 
 		setSize(WIDTH,HEIGHT);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -65,7 +71,6 @@ public class Find extends JFrame{
 
 
 		//Create the find label and text pane
-		JTextPane findArea = new JTextPane();
 		findArea.setFont(new Font(FONT, 0, FONT_SIZE));
 		findArea.setBorder(BorderFactory.createLineBorder(BORDERCOLOR));
 
@@ -74,7 +79,6 @@ public class Find extends JFrame{
 		findLabel.setBackground(BACKGROUND);
 
 		//Create the replace label and text pane
-		replaceArea = new JTextPane();
 		replaceArea.setFont(new Font(FONT, 0, FONT_SIZE));
 		replaceArea.setBorder(BorderFactory.createLineBorder(BORDERCOLOR));
 
@@ -82,8 +86,10 @@ public class Find extends JFrame{
 		replaceLabel.setFont(new Font(FONT, 0, LABEL_FONT_SIZE));
 		replaceLabel.setBackground(BACKGROUND);
 		
-		
-		
+		//Create the find button
+		findButton.setFont(new Font("Menlo", 0, 20));
+		findButton.setBackground(RGB.fromHex("#ECEFF1"));
+		findButton.setText("Find");
 		
 
 		JPanel filler1 = new JPanel();
@@ -134,6 +140,16 @@ public class Find extends JFrame{
 		c.ipady=50;
 		container.add(filler2, c);
 		
+		//Set the location of the find button
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridy=4;
+		c.gridx=0;
+		c.gridwidth=4;
+		c.ipady=10;
+		c.weightx=1;
+		container.add(findButton, c);
+
+		
 		
 		//Create a clear border for easier reading of the text
 		container.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
@@ -141,6 +157,7 @@ public class Find extends JFrame{
 		add(container);
 		
 	}
+	
 	
 	
 	

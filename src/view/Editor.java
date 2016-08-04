@@ -15,6 +15,7 @@ import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
+import javax.swing.text.Highlighter;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -284,8 +285,9 @@ public class Editor extends JPanel implements KeyListener {
 		undoText.add(input);
 	}
 	
-	public String getSelectedText(){
-		return area.getSelectedText();
+	public Highlighter getHighlighter(){
+		return area.getHighlighter();
 	}
+		
 	
 }

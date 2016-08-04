@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.text.Highlighter;
+
 import instruction.Block;
 import parser.Parser;
 
@@ -135,8 +137,21 @@ public class Pseudocode extends JFrame {
 		editor.addUndoText(input);
 	}
 	
-	public String getSelectedText(){
-		return editor.getSelectedText();
+	public Highlighter getHighlighter(){
+		return editor.getHighlighter();
 	}
+	
+	public int getFrameX(){
+		return getX();
+	}
+	
+	public int getFrameY(){
+		return getY();
+	}
+	
+	public int getFrameWidth(){
+		return getWidth();
+	}
+	
 	
 }

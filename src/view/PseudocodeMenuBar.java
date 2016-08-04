@@ -30,6 +30,10 @@ import java.util.jar.JarFile;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import javax.swing.text.Highlighter.HighlightPainter;
 
 import expression.RGB;
 
@@ -50,7 +54,7 @@ import javax.swing.KeyStroke;
  */
 @SuppressWarnings("serial")
 public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
-	
+
 	// Refers to the pseudocode frame that is containing this menu bar.
 	private Pseudocode pseudocode;
 
@@ -69,16 +73,16 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 	// The menu item that shows the current mesh
 	private static JMenuItem mesh;
-	
+
 	//The redo text storage array (stores the data needed to redo)
 	private static ArrayList<String> redoText = new ArrayList<String>();
-	
+
 	//This holds all the recently opened files
 	private static ArrayList<String> openedFilePaths = new ArrayList<String>();
-	
+
 	//Counts the number of opened files for open recent
 	int openCounter=0;
-	
+
 	//Setting up the menu and menu items for open recent
 	JMenu openRecent = createMenu("Open Recent");
 	JMenuItem open1 = new JMenuItem();
@@ -86,10 +90,13 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 	JMenuItem open3 = new JMenuItem();
 	JMenuItem open4 = new JMenuItem();
 	JMenuItem open5 = new JMenuItem();
-	
-	String findText;
 
-	
+	Find find;
+
+	//the location of the last word found
+	int lastFind=0;
+
+
 	// The FileFilter object that is used to filter non-pseudocode files from being opened.
 	private FileFilter pseudocodeFilter = new FileFilter() {
 
@@ -128,29 +135,29 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		JMenu fileMenu = createMenu("File");
 		fileMenu.add(createMenuItem("New", 'N'));
 		fileMenu.add(createMenuItem("Open", 'O'));
-		
+
 		//Adding the open recent menu
 		openRecent.setFont(font);
-		
+
 		//Creating the action listeners and action commands for the submenu items
 		open1.addActionListener(this);
 		open1.setActionCommand("open1");
-		
+
 		open2.addActionListener(this);
 		open2.setActionCommand("open2");
-		
+
 		open3.addActionListener(this);
 		open3.setActionCommand("open3");
-		
+
 		open4.addActionListener(this);
 		open4.setActionCommand("open4");
-		
+
 		open5.addActionListener(this);
 		open5.setActionCommand("open5");
 
-		
+
 		fileMenu.add(openRecent);
-		
+
 		fileMenu.add(createMenuItem("Save", 'S'));
 		fileMenu.add(createMenuItem("Save As"));
 		fileMenu.add(createMenuItem("Quit", 'Q'));
@@ -408,7 +415,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 
 		// If the user selected a file to open, get the File object
 		if (choice == JFileChooser.APPROVE_OPTION) {
-			
+
 			File file= new File(filePath);
 
 			//if there are no unsaved changes
@@ -422,104 +429,104 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 				//if yes is clicked
 				if(quitResult==0){
 					saveFile();
-					
+
 				}
 				//if no is clicked
 				else if(quitResult==1){
-					
+
 				}
 				//if cancel is clicked
 				else{
 					return;
 				}
 			}
-			
+
 			currentFile = chooser.getSelectedFile();
-			
+
 			filePath=chooser.getSelectedFile().getAbsolutePath();
-			
-			
+
+
 			// Check if this is a valid file, and if it is, update the pseudocode editor
 			// with the String contents of the file.
 			if (currentFile.exists()) 
 				pseudocode.updateText(readFile(currentFile));		
-			
-				/*
-				 * Each time a file is opened, it is added to the open recent menu and openCounter is added to
-				 * until it reaches 5
-				 * 
-				 * The newest opened file occupies the first place with each succeeding file occupying the
-				 * following five spaces
-				 */
-				if(openCounter==0){
-					
-					//Adds the opened file's path to the recently opened files list
-					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
-					
-					open1.setText(chooser.getName(currentFile).toString());
-					openRecent.add(open1);
-					openCounter++;
+
+			/*
+			 * Each time a file is opened, it is added to the open recent menu and openCounter is added to
+			 * until it reaches 5
+			 * 
+			 * The newest opened file occupies the first place with each succeeding file occupying the
+			 * following five spaces
+			 */
+			if(openCounter==0){
+
+				//Adds the opened file's path to the recently opened files list
+				openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+
+				open1.setText(chooser.getName(currentFile).toString());
+				openRecent.add(open1);
+				openCounter++;
+			}
+			else if(openCounter==1){
+				//Adds the opened file's path to the recently opened files list
+				openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+
+				open2.setText(open1.getText());
+				open1.setText(chooser.getName(currentFile).toString());
+				openRecent.add(open2);
+
+				openCounter++;
+			}
+			else if(openCounter==2){
+				//Adds the opened file's path to the recently opened files list
+				openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());	
+
+				open3.setText(open2.getText());
+				open2.setText(open1.getText());
+				open1.setText(chooser.getName(currentFile).toString());
+
+				openRecent.add(open3);
+				openCounter++;
+			}
+			else if(openCounter==3){
+				//Adds the opened file's path to the recently opened files list
+				openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+
+				open4.setText(open3.getText());
+				open3.setText(open2.getText());
+				open2.setText(open1.getText());
+				open1.setText(chooser.getName(currentFile).toString());
+
+				openRecent.add(open4);
+				openCounter++;
+			}
+			else if(openCounter==4){
+				//Adds the opened file's path to the recently opened files list
+				openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
+
+				//If there are only 4 recent files before, there will be an error
+				try{
+					openedFilePaths.remove(5);
 				}
-				else if(openCounter==1){
-					//Adds the opened file's path to the recently opened files list
-					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
-					
-					open2.setText(open1.getText());
-					open1.setText(chooser.getName(currentFile).toString());
-					openRecent.add(open2);
-					
-					openCounter++;
-				}
-				else if(openCounter==2){
-					//Adds the opened file's path to the recently opened files list
-					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());	
-					
-					open3.setText(open2.getText());
-					open2.setText(open1.getText());
-					open1.setText(chooser.getName(currentFile).toString());
-					
-					openRecent.add(open3);
-					openCounter++;
-				}
-				else if(openCounter==3){
-					//Adds the opened file's path to the recently opened files list
-					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
-					
-					open4.setText(open3.getText());
-					open3.setText(open2.getText());
-					open2.setText(open1.getText());
-					open1.setText(chooser.getName(currentFile).toString());
-					
-					openRecent.add(open4);
-					openCounter++;
-				}
-				else if(openCounter==4){
-					//Adds the opened file's path to the recently opened files list
-					openedFilePaths.add(0, chooser.getSelectedFile().getAbsolutePath());
-					
-					//If there are only 4 recent files before, there will be an error
-					try{
-						openedFilePaths.remove(5);
-					}
-					catch(Exception e){}
-					
-					open5.setText(open4.getText());
-					open4.setText(open3.getText());
-					open3.setText(open2.getText());
-					open2.setText(open1.getText());
-					open1.setText(chooser.getName(currentFile).toString());
-					
-					System.out.println(chooser.getName(currentFile));
-					openRecent.add(open5);
-				}
-				
-			
+				catch(Exception e){}
+
+				open5.setText(open4.getText());
+				open4.setText(open3.getText());
+				open3.setText(open2.getText());
+				open2.setText(open1.getText());
+				open1.setText(chooser.getName(currentFile).toString());
+
+				System.out.println(chooser.getName(currentFile));
+				openRecent.add(open5);
+			}
+
+
 		}
 		//Clears oldExampleName as an example is no longer open
 		oldExampleName="";
 
 	}
-	
+
 	/*
 	 * Opens the recently opened files (each function opens the xth most recent file)
 	 */
@@ -527,22 +534,22 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		File file = new File(openedFilePaths.get(0));
 		pseudocode.updateText(readFile(file));
 	}
-	
+
 	private void openRecentFile2(){
 		File file = new File(openedFilePaths.get(1));
 		pseudocode.updateText(readFile(file));
 	}
-	
+
 	private void openRecentFile3(){
 		File file = new File(openedFilePaths.get(2));
 		pseudocode.updateText(readFile(file));
 	}
-	
+
 	private void openRecentFile4(){
 		File file = new File(openedFilePaths.get(3));
 		pseudocode.updateText(readFile(file));
 	}
-	
+
 	private void openRecentFile5(){
 		File file = new File(openedFilePaths.get(4));
 		pseudocode.updateText(readFile(file));
@@ -667,42 +674,42 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		ArrayList<String> undoText = new ArrayList<String>();
 		undoText=pseudocode.returnUndoText();
 		redoText.add(pseudocode.getText());
-	try{
-		if(pseudocode.getText().equals(undoText.get(undoText.size()-1))){
+		try{
+			if(pseudocode.getText().equals(undoText.get(undoText.size()-1))){
+				undoText.remove(undoText.size()-1);
+				try{
+					pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
+
+				}
+				catch(Exception e){}
+			}
+			else{
+				try{
+					pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
+				}
+				catch(Exception e){}
+			}
+
+		}
+		catch(Exception e){
+			pseudocode.updateText("");
+			pseudocode.setUndoText(undoText);
+			return;
+		}
+		if(undoText.size()>0)
 			undoText.remove(undoText.size()-1);
-			try{
-				pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
-				
-			}
-			catch(Exception e){}
-		}
-		else{
-			try{
-				pseudocode.updateText((undoText.get(undoText.size()-1)).toString());
-			}
-			catch(Exception e){}
-		}
-		
-	}
-	catch(Exception e){
-		pseudocode.updateText("");
+
 		pseudocode.setUndoText(undoText);
-		return;
 	}
-	if(undoText.size()>0)
-		undoText.remove(undoText.size()-1);
-	
-		pseudocode.setUndoText(undoText);
-}
 
 	/*
 	 * This function redoes code which has been undone by the user by using an array of the text in the text
 	 * pane after and before an undo
 	 */
 	private void redo(){
-		
+
 		pseudocode.addUndoText(pseudocode.getText());
-		
+
 		try{
 			pseudocode.updateText(redoText.get(redoText.size()-1));
 			redoText.remove(redoText.size()-1);
@@ -712,36 +719,49 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		}
 		pseudocode.addUndoText(pseudocode.getText());
 	}
-	
+
 	private void findMenu(){
-		
-		
-		final Find find = new Find();
-		
-		JButton findButton = new JButton();
-		findButton.setFont(new Font("Menlo", 0, 20));
-		findButton.setBackground(RGB.fromHex("#ECEFF1"));
-		findButton.setText("Find");
-		findButton.addActionListener(new ActionListener(){
+		find=new Find(pseudocode.getFrameX(), pseudocode.getFrameY(), pseudocode.getFrameWidth());
+
+		find.findButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				findText = pseudocode.getSelectedText();
-				if(find.replaceArea.getText().equals("")){
-					
-				}
+				findLogic(find.findArea.getText());
 			}
 		});
-		
-		//Set the location of the find button
-		find.c.fill=GridBagConstraints.HORIZONTAL;
-		find.c.gridy=4;
-		find.c.gridx=0;
-		find.c.gridwidth=4;
-		find.c.ipady=10;
-		find.c.weightx=1;
-		find.container.add(findButton, find.c);
-		
+
+
 	}
-	
+
+	public void findLogic(String findWord){
+		if(find.replaceArea.getText().equals("")){
+			for(int i=lastFind;i<pseudocode.getText().length()-(findWord.length()-2); i++){
+				if(pseudocode.getText().substring(i,i+findWord.length()).equals(findWord)){
+					Highlighter highlighter = pseudocode.getHighlighter();
+					HighlightPainter painter = 
+							new DefaultHighlighter.DefaultHighlightPainter(Color.yellow);
+					try {
+						highlighter.removeAllHighlights();
+						highlighter.addHighlight(i, i+findWord.length(), painter);
+					} catch (BadLocationException e) { }
+
+
+					if(pseudocode.getText().length()-i>findWord.length()){
+						lastFind=i+1;
+					}
+					else{
+						lastFind=0;
+					}
+
+					break;
+				}
+			}
+			
+		}
+		else if(find.replaceArea.getText().length()>0){
+			pseudocode.updateText(pseudocode.getText().replaceFirst(findWord, find.replaceArea.getText()));
+		}
+	}
+
 
 
 
