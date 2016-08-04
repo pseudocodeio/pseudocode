@@ -762,7 +762,7 @@ public class PseudocodeMenuBar extends JMenuBar implements ActionListener {
 		if(pseudocode.getText().length()-lastFind<findWord.length()){lastFind=0;}
 
 		if(find.replaceArea.getText().equals("")){
-			for(int i=lastFind;i<pseudocode.getText().length()-(findWord.length()-2); i++){
+			for(int i=lastFind;i<pseudocode.getText().length()-(findWord.length()-1); i++){
 
 
 				if(pseudocode.getText().substring(i,i+findWord.length()).equals(findWord)){
