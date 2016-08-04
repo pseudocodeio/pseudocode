@@ -59,15 +59,24 @@ draw a polygon from 0, 0 to 100, 100, 0, 50 to 0, 0
 You can draw images by giving a url or file path
 
 ```
-draw an image "URL"
-draw an image "FILE_PATH"
+draw image "URL"
+draw image "FILE_PATH"
+```
+
+You can also use strings
+
+```
+set x to "FILE_PATH"
+draw image x
 ```
 
 Images have the same attributes as shapes
 
 ```
-draw an image "URL" at 100 100 with a size of 50
-draw an image "URL" at 100 100 with a width of 50 and height of 50
+draw image "URL" at 100 100 with a size of 50
+draw image "URL" at 100 100 with a width of 50 and height of 50
+set x to "FILE_PATH"
+draw x at 100 100
 ```
 
 ### Colors
@@ -130,6 +139,7 @@ You can create variables and assign values to them
 ```
 set x to 1
 set y to x
+set z to "hello"
 ```
 
 ### Lists
@@ -320,6 +330,9 @@ You can print variables within text
 ```
 set x to 5
 print "The dog jumped over the quick brown fox by #x meters"
+
+set y to "pizza"
+print "The dog ate a lot of #y"
 ```
 
 You can print a whole list
