@@ -21,6 +21,7 @@ public class Assign extends Instruction {
 	ArrayList<Expression> expression;
 	Expression value;
 	Expression index;
+	String word;
 	Block.Variable type;
 	
 	/**
@@ -46,6 +47,12 @@ public class Assign extends Instruction {
 		this.index = index;
 		type = Block.Variable.Number;
 	}
+	
+	public Assign(SymbolTerminal symbol, String word){
+		this.symbol = symbol;
+		this.word = word;
+		type = Block.Variable.String;
+	}
 
 	/**
 	 * Calls the Block object's assign method with the given symbol and expression object.
@@ -65,6 +72,9 @@ public class Assign extends Instruction {
 				}
 			}
 			block.assign(symbol, value, index, type);
+			break;
+		case String:
+			block.assign(symbol, word, type);
 			break;
 		}
 	}

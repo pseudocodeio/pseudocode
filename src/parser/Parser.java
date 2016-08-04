@@ -2,6 +2,7 @@ package parser;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import expression.*;
@@ -372,12 +373,19 @@ public class Parser {
 			}
 			else if (getNext("to", "as") && peekExpression()) {
 				ArrayList<Expression> values = new ArrayList<Expression>();
-				if(peekExpression())
-					values.add(parseExpression());
-				while(!atDelimiter()){
-					if(getNext(",") && peekExpression())
-						values.add(parseExpression());
+				if(peekNext().startsWith("\"")){
+					
+					return new Assign(symbol, getNext().replace("\"", ""));
 				}
+				else if(peekExpression()){
+					values.add(parseExpression());
+					while(!atDelimiter()){
+						if(getNext(",") && peekExpression())
+							values.add(parseExpression());
+					}
+				}
+
+
 					
 					return new Assign(symbol, values);
 			}
@@ -485,7 +493,10 @@ public class Parser {
 			// If drawing an image
 			if(draw.isImage()){
 				if(hasNext()){
-					draw.setImageLocation(getNext());
+					if(peekExpression())
+						draw.setImageLocation(parseExpression());
+					else
+						draw.setImageLocation(getNext().replace("\"", ""));
 				}
 			}
 			

@@ -23,6 +23,7 @@ public class Constant {
 	// A set of reserved keywords
 	public static HashSet <String> keyword = new HashSet <String> () {{
 		add("draw");
+		add("draw image");
 		add("set");
 		add("to");
 		add("do");

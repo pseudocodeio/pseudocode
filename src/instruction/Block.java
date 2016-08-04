@@ -1,7 +1,9 @@
 package instruction;
 
 import java.awt.Graphics;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,13 +30,12 @@ public class Block extends Instruction {
 	private Block parent;
 	
 	enum Variable {
-		Number, List, String, Image
+		Number, List, String
 	};
 	
 	private static final double NUMBER = 0;
 	private static final double LIST = 1;
 	private static final double STRING = 2;
-	private static final double IMAGE = 3;
 	
 	// The console output view.
 	private Console console;
@@ -307,13 +308,16 @@ public class Block extends Instruction {
 	public double get(String symbol, int index, HashMap <String, HashMap <String, Double>> values){
 		if(values == null)
 			return 0;
-		String getName = "value";
-		if(values.get(symbol.toString()).get("type") == LIST){
+		if(isType(values, symbol, NUMBER)){
+			return values.get(symbol).get("value");
+		}
+			
+		if(isType(values, symbol, LIST) || isType(values, symbol, STRING)){
 			if(index >= values.get(symbol.toString()).get("length") || index < 0)
 				index = 0;
-			getName = "" + index;
+			return values.get(symbol).get("" + index);
 		}
-		return values.get(symbol).get(getName);
+		return 0;
 	}
 	
 	/**
@@ -328,6 +332,9 @@ public class Block extends Instruction {
 	public void assign(String symbol, Expression value){
 		assign(symbol, value.evaluate(this), 0, null, currentScope(), Variable.Number);
 	}
+	public void assign(SymbolTerminal symbol, String word, Variable type){
+		assign(symbol.toString(), 0, -1, castString(word), currentScope(), type);
+	}
 	public void assign(SymbolTerminal symbol, Expression value, Expression index, Variable type){
 		int i = -1;
 		if(index != null){
@@ -337,7 +344,11 @@ public class Block extends Instruction {
 		assign(symbol.toString(), value.evaluate(this), i, null, currentScope(), type);
 	}
 	public void assign(SymbolTerminal symbol, ArrayList<Expression> values, Variable type){
-		assign(symbol.toString(), 0, -1, values, currentScope(), type);
+		ArrayList<Double> nums = new ArrayList<Double>();
+		for(Expression i: values){
+			nums.add(i.evaluate(this));
+		}
+		assign(symbol.toString(), 0, -1, nums, currentScope(), type);
 	}
 	
 	/**
@@ -347,7 +358,7 @@ public class Block extends Instruction {
 	 * @param i - index of what is being set if the variable is a list
 	 * @param scope - HashMap of local or global variable
 	 */
-	public void assign(String symbol, double value, int index, ArrayList<Expression> values, HashMap <String, HashMap <String, Double>> scope, Variable type ){
+	public void assign(String symbol, double value, int index, ArrayList<Double> values, HashMap <String, HashMap <String, Double>> scope, Variable type ){
 		HashMap <String, Double> valueMap = new HashMap <String, Double>();
 		switch(type){
 		case Number:
@@ -359,14 +370,14 @@ public class Block extends Instruction {
 			if(index < 0){
 				if(values.size() == 1){
 					valueMap.put("type", NUMBER);
-					valueMap.put("value", values.get(0).evaluate(this));
+					valueMap.put("value", values.get(0));
 					scope.put(symbol.toString(), valueMap);
 				}
 				else{
 					valueMap.put("type", LIST);
 					valueMap.put("length", (double) values.size());
 					for(int i = 0; i < values.size(); i++){
-						valueMap.put("" + i, values.get(i).evaluate(this));
+						valueMap.put("" + i, values.get(i));
 					}
 					scope.put(symbol.toString(), valueMap);
 				}
@@ -378,23 +389,15 @@ public class Block extends Instruction {
 				}
 			}
 			break;
+		case String:
+			valueMap.put("type", STRING);
+			valueMap.put("length", (double) values.size());
+			for(int i = 0; i < values.size(); i++){
+				valueMap.put("" + i, values.get(i));
+			}
+			scope.put(symbol.toString(), valueMap);
+			break;
 		}
-	}
-	
-	/**
-	 * Assigns a image type variable
-	 * @param symbol - the name of the variable
-	 * @param path - the value being stored
-	 */
-	public void assignImg(SymbolTerminal symbol, String path){
-		HashMap <String, Double> valueMap = new HashMap <String, Double>();
-		valueMap.put("type", IMAGE);
-		ArrayList<Double> values = parseString(symbol.toString());
-		for(int i = 0; i < values.size(); i++){
-			valueMap.put(i+ "", values.get(i));
-		}
-		valueMap.put("length", (double) values.size());
-		this.symbol.put(symbol.toString(), valueMap);
 	}
 	
 	private ArrayList<Double> parseString(String string2) {
@@ -456,11 +459,11 @@ public class Block extends Instruction {
 	 * Returns the double value of the given String
 	 */
 	private ArrayList<Double> castString(String word){
-		ArrayList<Double> characters = new ArrayList<Double>();
-		for(char c: word.toCharArray()){
-			characters.add((double)c);
-		}
-		return characters;
+		  ArrayList<Double> output = new ArrayList<Double>();
+		  for(char i: word.toCharArray()){
+			  output.add((double) i);
+		  }
+		  return output;
 	}
 	
 	/**
@@ -494,5 +497,17 @@ public class Block extends Instruction {
 			return print;
 		}
 		return "";
+	}
+	
+	/**
+	 * Returns a String of a Binary Representation
+	 */
+	public String charToString(Expression input){
+		String word = "";
+		for(double i: getList(input.toString())){
+			char c = (char)i;
+			word += c;
+		}
+		return word;
 	}
 }

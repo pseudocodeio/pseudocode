@@ -105,6 +105,7 @@ public class Editor extends JPanel implements KeyListener {
 			// Split the line into tokens
 			String[] tokens = lexer.lex(line, true, false);
 			boolean firstToken = true;
+			boolean secondToken = false;
 			boolean comment = false;
 			
 			// Go to each token
@@ -120,9 +121,12 @@ public class Editor extends JPanel implements KeyListener {
 				
 				// Conditions to determine a special syntax highlighting style
 				// TODO: add more styles (future)
-				if(!comment){
+				if(!comment) {
 					if (firstToken && Constant.keyword.contains(token))
 						style = "keyword";
+					else if (secondToken && Constant.keyword.contains(tokens[i - 1] + " " + token))
+						style = "keyword";
+					
 					else if (token.matches("/")){
 						i++;
 						if(i < tokens.length && tokens[i].equals("/")){
@@ -156,7 +160,14 @@ public class Editor extends JPanel implements KeyListener {
 				
 				// Advanced the position to the next token
 				position += token.length();
-				firstToken = false;
+				
+				// Record first or second token
+				if (firstToken) {
+					firstToken = false;
+					secondToken = true;
+				}
+				else if (secondToken && ! token.matches("\\s+"))
+					secondToken = false;
 			}
 			// Account for the newline character
 			position++;

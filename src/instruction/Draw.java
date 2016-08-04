@@ -30,7 +30,9 @@ public class Draw extends Instruction {
 	Expression height;
 	Color color;
 	boolean randomColor = false;
-	BufferedImage image = null;
+	String StringImage = "";
+	Expression expImage;
+	BufferedImage image;
 	boolean filled = false;
 	
 	// ArrayList for all the points in a arbitrary polygon
@@ -171,22 +173,11 @@ public class Draw extends Instruction {
 	*tries to read the image from the computer and if can't reads from web
 	*/
 	public void setImageLocation(String loc){
-		loc = loc.replace("\"", "");
-		// read image from computer
-		try {
-			this.image = ImageIO.read(new File(loc));
-		} catch (IOException e) {
-			// if fail read from url
-			try{
-				URL url = new URL(loc);
-				this.image = ImageIO.read(url);
-			} catch (IOException e1){
-				// if both fail tell the user that the image didn't load
-				System.out.println("image not found");
-			}
-            
-			
-		}
+		StringImage = loc;
+	}
+	
+	public void setImageLocation(Expression loc){
+		expImage = loc;
 	}
 	
 	@Override
@@ -225,6 +216,26 @@ public class Draw extends Instruction {
 				g.drawLine((int) x, (int) y, (int) width, (int) height);
 			break;
 		case Image:
+			
+			if(expImage != null){
+				StringImage = algorithm.charToString(expImage);
+			}
+				
+			// read image from computer
+			try {
+				this.image = ImageIO.read(new File(StringImage));
+			} catch (IOException e) {
+				// if fail read from url
+				try{
+					URL url = new URL(StringImage);
+					this.image = ImageIO.read(url);
+				} catch (IOException e1){
+					// if both fail tell the user that the image didn't load
+					System.out.println("image not found");
+				}
+	            
+				
+			}
 			g.drawImage(image, (int)x, (int)y, (int)width, (int)height, null);
 			break;
 		case Polygon:
